@@ -1,0 +1,501 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project 29: Root Cause Analysis Statistics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Rancangan project portofolio Data Analyst: uji chi-square, Fisher exact, odds ratio, dan regresi logistik untuk menemukan faktor penyebab NG lampu LED.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: tema terang ala Google (single theme, sengaja): latar putih keabuan, kartu putih;
+   biru = struktur, kuning = penanda utama, hijau = info pendukung, merah = aksen.
+   Skala huruf: H1 32 · H2 25 · H3 19 · body 16.5 · keterangan 14 · label 12.5 */
+:root{color-scheme:light;
+--bg:#F8F9FA;--card:#FFFFFF;--sub:#F1F3F4;--line:#DADCE0;
+--ink:#202124;--head:#174EA6;--mut:#5F6368;
+--navy:#1A73E8;--navy-ink:#FFFFFF;--teal:#188038;--amber:#FBBC04;--amber-ink:#3C2A00;--bar:#1A73E8;--soft:#E8F0FE;
+--gb:#4285F4;--gr:#EA4335;--gy:#FBBC04;--gg:#34A853;
+--navyH:#1A73E8;--amberH:#B06000;--tealH:#188038;--plumH:#9334E6;--roseH:#D93025;--skyH:#1967D2;--onph:#fff;
+--f:"Source Sans 3",Calibri,Carlito,"Segoe UI",Arial,sans-serif;
+--h1:clamp(26px,2.6vw,32px);--h2:clamp(21px,2vw,25px);--h3:19px;--body:16.5px;--small:14px;--label:12.5px}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html{scroll-padding-top:64px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--body)/1.6 var(--f)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+main{max-width:880px;margin:0 auto;padding-block:16px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+b,strong{font-weight:700}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 14px;font-size:var(--small);font-weight:600}
+nav a:hover,nav a:focus-visible{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);outline:none}
+.banner{background:var(--navy);color:var(--navy-ink);border-radius:18px;padding:22px 26px}
+.banner h1{margin:0 0 8px;font-size:var(--h1);font-weight:800;line-height:1.2;text-wrap:balance;letter-spacing:-.01em}.banner p{margin:0;font-size:18px;line-height:1.55;opacity:.97}.banner .goal b{font-weight:800}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tags{align-items:center}.tlab{font-size:var(--small);font-weight:700;margin-right:4px;opacity:.95}
+.tag{border-radius:999px;padding:3px 12px;font-size:var(--label);font-weight:700;background:rgba(255,255,255,.2);letter-spacing:.02em}.tag.a{background:var(--amber);color:var(--amber-ink)}
+.card{border-radius:16px;padding:16px 20px;background:var(--card);border:1px solid var(--line);margin:12px 0}
+.card p{margin:8px 0}
+h2{font-size:var(--h2);font-weight:800;color:var(--head);margin:48px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--line);line-height:1.25;text-wrap:balance}
+h2 small{display:block;font-size:var(--small);font-weight:400;color:var(--mut);margin-top:4px}
+h3{font-size:var(--h3);font-weight:700;color:var(--head);margin:16px 0 6px;line-height:1.3}
+.card h3:first-child,.card>div>h3:first-child{margin-top:4px}
+.add{display:inline-block;vertical-align:middle;margin-left:8px;border-radius:999px;padding:2px 10px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff}
+.how{background:var(--soft);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:var(--small);line-height:1.55;color:var(--ink)}.how::before{content:"Cara membaca ";font-weight:700;color:var(--teal)}
+.callout{border-radius:14px;padding:14px 20px;margin:12px 0;font-size:16px}.callout h4{margin:0 0 6px;font-size:var(--h3);font-weight:700}.callout p{margin:6px 0}
+.callout.a{background:var(--amber);color:var(--amber-ink)}.callout.g{background:var(--teal);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.kpis .card{margin:0}
+.kpi .v{font-size:30px;font-weight:800;display:block;line-height:1.15;color:var(--head);font-variant-numeric:tabular-nums}.kpi .l{display:block;font-weight:700;font-size:16px;margin-top:2px}.kpi .d{display:block;font-size:var(--small);line-height:1.4;margin-top:6px;color:var(--mut)}
+.kpi.t{background:var(--teal);border-color:var(--teal);color:#fff}.kpi.am{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.kpi.t .v,.kpi.t .d,.kpi.am .v,.kpi.am .d{color:inherit}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--card);border-radius:12px;overflow:hidden}
+th{background:var(--navy);color:var(--navy-ink);padding:9px 12px;text-align:left;vertical-align:top;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(odd) td{background:var(--sub)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:6px 0;display:grid;grid-template-columns:40px 1fr;gap:4px 8px;font-size:16px;line-height:1.45}
+.q .id{font-weight:800;color:var(--head)}.q .m{grid-column:2;font-size:var(--small);color:var(--mut)}
+.pri{display:inline-block;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;margin-left:6px;background:var(--sub);border:1px solid var(--line);color:var(--mut)}.pri.M{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.pri.S{background:var(--navy);border-color:var(--navy);color:#fff}
+.theme{font-size:var(--label);font-weight:700;color:var(--teal);margin:20px 0 4px;text-transform:uppercase;letter-spacing:.08em}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.flow span{border-radius:999px;padding:5px 12px;font-size:var(--small);font-weight:700;background:var(--sub);border:1px solid var(--line)}
+.flow span.ng{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.flow span.ok{background:var(--teal);border-color:var(--teal);color:#fff}.flow i{font-style:normal;color:var(--mut);font-size:var(--small)}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;width:100%;font:inherit;font-size:var(--small);color:var(--ink);background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.row .n{width:96px;flex:none;font-weight:600}.row .tr{flex:1;background:var(--sub);border-radius:8px;height:24px;position:relative;overflow:hidden}
+.row .b{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:var(--bar);transition:width .25s}
+.row.sel .b{background:var(--amber)}.row.sel .n{color:var(--head);font-weight:800}
+.row .c{width:58px;text-align:right;flex:none;font-variant-numeric:tabular-nums;font-weight:600}
+.row:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:8px}
+.ctl{display:flex;align-items:center;gap:12px;margin:14px 0 10px;font-weight:700;font-size:15px}.ctl input{flex:1;accent-color:#F2A541}.ctl output{min-width:48px;text-align:right}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.res div{background:var(--sub);border-radius:12px;padding:10px 14px;font-size:var(--small);color:var(--mut)}.res b{display:block;font-size:24px;font-weight:800;color:var(--head);font-variant-numeric:tabular-nums}
+.steps{counter-reset:s;display:grid;gap:8px;margin:10px 0;padding:0;list-style:none}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 54px;position:relative}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.steps li.L::before{background:var(--amber);color:var(--amber-ink)}
+.steps b.t{display:block;font-size:17px;color:var(--head);line-height:1.3}.steps p{margin:6px 0;font-size:15px;line-height:1.5}.steps .meta{font-size:13px;color:var(--mut)}
+.phase{font-size:var(--label);font-weight:700;color:var(--teal);margin:18px 0 0;text-transform:uppercase;letter-spacing:.08em}
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:12px 0}.tools .card{margin:0}
+.tools b{display:block;font-size:var(--h3);color:var(--head)}.tools .r{font-size:15px;margin:6px 0 0}.tools .alt{font-size:var(--small);color:var(--mut);margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}summary{cursor:pointer;font-weight:700;font-size:17px;color:var(--head)}details p{font-size:15.5px}
+.pill{border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff;margin-left:4px}.pill.d{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.chip{display:inline-block;border-radius:999px;padding:3px 11px;margin:3px 4px 3px 0;font-size:var(--small);font-weight:600;background:var(--sub);border:1px solid var(--line)}
+.tm{border-bottom:2px dotted var(--amber);background:rgba(242,165,65,.16);border-radius:4px;padding:0 2px;cursor:help}
+#tip{position:fixed;display:none;max-width:320px;white-space:pre-line;background:#202124;color:#fff;padding:10px 12px;border-radius:12px;font-size:var(--small);line-height:1.4;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+ul.tight{margin:6px 0;padding-left:20px}ul.tight li{margin:5px 0}
+.intro>.layout{grid-column:1/-1}
+.layout{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.layout .lead{margin:4px 0 10px;max-width:90ch}
+.figw{overflow-x:auto;margin:8px 0}.figw svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--f)}
+.figw .lane{fill:var(--sub)}.figw .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}.figw .box.hi{stroke:var(--bar);stroke-width:2.5}
+.figw text{fill:var(--ink)}.figw .ln{font-size:15px;font-weight:700;fill:var(--head)}.figw .gl{font-size:13px;font-weight:700;fill:var(--teal);letter-spacing:.03em}
+.figw .bt{font-size:13px}.figw .b{font-size:15px;font-weight:700}.figw .st{font-size:13px;fill:var(--mut)}
+.figw .grp{stroke:var(--teal);stroke-width:2}.figw .ar{stroke:var(--bar);stroke-width:2}.figw .ah{fill:var(--bar)}
+.figw .ng,.figw .ngs{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}.figw .aha{fill:var(--amber)}.figw .nl{font-size:14px;font-weight:700;fill:var(--amberH)}
+.figw .dt{stroke:var(--mut);stroke-width:2;stroke-dasharray:2 4}
+.figw .okb{fill:var(--teal)}.figw .scb{fill:var(--amber)}.figw .wt{fill:#fff;font-size:14px;font-weight:700}.figw .at{fill:var(--amber-ink);font-size:14px;font-weight:700}
+.figw .mk{fill:var(--amber)}.figw .mt{fill:var(--amber-ink);font-size:14px;font-weight:800}
+.legend{counter-reset:l;list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}
+.legend li{counter-increment:l;position:relative;padding-left:38px;font-size:15.5px;line-height:1.55}
+.legend li::before{content:counter(l);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--amber);color:var(--amber-ink);font-weight:800;font-size:14px;display:grid;place-items:center}
+@media (min-width:1000px){.legend{grid-template-columns:repeat(4,1fr);gap:16px}}
+.kpi{--h:var(--navyH);background:color-mix(in srgb,var(--h) 11%,var(--card));border-color:color-mix(in srgb,var(--h) 35%,var(--card))}
+.kpi .v{color:var(--h)}.kpi .l{color:var(--ink)}.kpi .d{color:var(--mut)}
+.q[data-p="M"]{background:color-mix(in srgb,var(--amber) 13%,var(--card));border-color:color-mix(in srgb,var(--amber) 60%,var(--card))}
+.q[data-p="S"]{background:color-mix(in srgb,var(--skyH) 9%,var(--card));border-color:color-mix(in srgb,var(--skyH) 35%,var(--card))}
+.q[data-p="N"]{border-style:dashed}
+.q[data-p="M"] .id{color:var(--amberH)}.q[data-p="S"] .id{color:var(--skyH)}.q[data-p="N"] .id{color:var(--mut)}
+.pri.S{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}.fbar span{font-size:var(--small);font-weight:700;color:var(--mut);margin-right:2px}
+.fb{font:inherit;font-size:var(--small);font-weight:700;cursor:pointer;border-radius:999px;padding:6px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.fb i{font-style:normal;opacity:.7;margin-left:4px}.fb:hover{border-color:var(--bar)}.fb:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.fb.on{background:var(--navy);border-color:var(--navy);color:#fff}.fb.on[data-f="M"]{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.fb.on[data-f="S"]{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.defs p{margin:0 0 12px}.defs p:last-child{margin:0}
+.fx{display:inline-block;margin:2px 0;padding:1px 9px;border-radius:8px;background:color-mix(in srgb,var(--tealH) 12%,var(--card));border:1px solid color-mix(in srgb,var(--tealH) 40%,var(--card));color:var(--tealH);font-weight:700;font-size:15px;white-space:normal}
+.figw.fl svg{min-width:520px;max-width:1000px;margin:0 auto}.flowfull .card{padding:20px 24px}.flowfull .card>p{text-align:center;margin:12px 0 0}.figw .dia{fill:var(--sub);stroke:var(--bar);stroke-width:2}.figw .b2{font-size:14px;font-weight:700}
+.figw .arT{fill:none;stroke:var(--teal);stroke-width:2}.figw .aht{fill:var(--teal)}.figw .arA{fill:none;stroke:var(--amber);stroke-width:2}.figw .aha2{fill:var(--amber)}
+.figw .lt{font-size:13px;font-weight:700;fill:var(--tealH)}.figw .la{font-size:13px;font-weight:700;fill:var(--amberH)}
+.ph .phase{color:var(--ph);font-size:13.5px}
+.ph .steps li{background:color-mix(in srgb,var(--ph) 8%,var(--card));border-color:color-mix(in srgb,var(--ph) 32%,var(--card))}
+.ph .steps li::before,.ph .steps li.L::before{background:var(--ph);color:var(--onph)}
+.ph .steps b.t{color:var(--ink)}
+.steps li.L::after{content:"beban besar";position:absolute;right:12px;top:12px;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:1px 8px;border-radius:999px;border:1px solid var(--ph,var(--amber));color:var(--ph,var(--amber))}
+.steps li.L b.t{padding-right:84px}
+.banner{background:linear-gradient(120deg,#1A73E8,#4285F4)}
+h2{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gb) 0 60px,var(--line) 60px) 1}
+nav a:nth-child(4n+1):hover{background:var(--gb);border-color:var(--gb);color:#fff}nav a:nth-child(4n+2):hover{background:var(--gr);border-color:var(--gr);color:#fff}nav a:nth-child(4n+4):hover{background:var(--gg);border-color:var(--gg);color:#fff}
+.callout.g{background:#E6F4EA;color:#0D652D;border:1px solid #A8DAB5}.callout.g h4{color:#137333}
+.callout.a{background:#FEF7E0;color:#3C2A00;border:1px solid #FDD663}
+.outs{display:grid;gap:12px;margin:12px 0}.outs .card{margin:0}
+.out{--h:var(--navyH);border-top:4px solid var(--h)}
+.out .oh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.out .oh b{font-size:var(--h3);color:var(--h);line-height:1.3}
+.ob{flex:none;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--amber);color:var(--amber-ink)}.ob.opt{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.out ul{margin:8px 0 0;padding-left:18px;font-size:15px;line-height:1.5}.out li{margin:4px 0}
+.out li:nth-last-child(-n+2){color:var(--mut);font-size:14px}
+@media (min-width:700px){.outs{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1280px){.outs{grid-template-columns:repeat(4,1fr)}}
+.tag.c1{background:#188038;color:#fff}.tag.c2{background:#9334E6;color:#fff}.tag.c3{background:#D93025;color:#fff}.tag.c4{background:#fff;color:#1A73E8}
+.sample td:first-child{white-space:nowrap}.src{border-top:1px dashed var(--line);padding-top:8px;font-size:15px}.src code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px}.note{font-size:13px;color:var(--mut);margin:6px 0 0}
+.wf{display:grid;gap:4px}
+.wl{--c:var(--navyH);position:relative;background:color-mix(in srgb,var(--c) 8%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--card));border-radius:14px;padding:10px 12px 12px}
+.wl h4{margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.ws{display:grid;gap:22px}
+.wb{position:relative;background:var(--card);border:2px solid var(--c);border-radius:12px;padding:10px 12px 10px 52px;min-height:62px}
+.wb .n{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--c);color:var(--onph);font-weight:800;font-size:14px;display:grid;place-items:center}
+.wb b{display:block;font-size:15px;line-height:1.3}.wb .s{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.wb.L::before{content:"beban besar";position:absolute;top:-10px;right:10px;background:var(--amber);color:var(--amber-ink);font-size:11px;font-weight:700;padding:0 8px;border-radius:999px;line-height:18px}
+.wb:not(:last-child)::after{content:"↓";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);color:var(--c);font-weight:800;font-size:16px;line-height:1}
+.wa{text-align:center;font-weight:800;font-size:20px;color:var(--mut);line-height:1.2}
+.wrow,.wrow1{display:grid;gap:4px}
+.wrow>.wl:first-child{margin-bottom:24px}.wrow>.wl:first-child::after{content:"↓";position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);font-weight:800;font-size:20px;color:var(--mut)}
+@media (min-width:1200px){
+.wrow{grid-template-columns:2fr 3fr;gap:30px}.wrow>.wl:first-child{margin-bottom:0}.wrow>.wl:first-child::after{content:"→";left:auto;right:-24px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wrow1{grid-template-columns:2fr 3fr}
+.ws{grid-template-columns:repeat(var(--k),1fr);gap:26px}
+.wb:not(:last-child)::after{content:"→";left:auto;right:-25px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wl{padding-left:8px;padding-right:8px}.ws{gap:34px}
+.wrow,.wrow1{gap:16px}.wrow>.wl:first-child::after{right:-14px;font-size:16px}
+}
+.docs code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px;white-space:nowrap}.docs td:nth-child(3){white-space:nowrap}
+/* layar lebar: nav jadi sidebar, konten dibagi kolom */
+.two{display:grid;gap:0 24px;align-items:start}.two>*{min-width:0}
+.qgrid{display:grid;gap:0 12px}.qgrid>*{min-width:0}
+@media (min-width:1000px){
+main{max-width:1480px}
+.two,.qgrid{grid-template-columns:1fr 1fr}.qgrid .theme{grid-column:1/-1}
+.kpis{grid-template-columns:repeat(6,1fr)}.tools{grid-template-columns:repeat(3,1fr)}
+.intro{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;align-items:start}.intro h3{grid-column:1/-1}.intro>p{grid-column:1}.intro>.scroll{grid-column:2;grid-row:2/span 3;margin-top:8px}
+.phases{display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px}.phases>*{min-width:0}
+}
+@media (min-width:1280px){
+main{display:grid;grid-template-columns:190px minmax(0,1fr);column-gap:32px}
+main>*{grid-column:2}
+main>nav{grid-column:1;grid-row:1/span 60;align-self:start;flex-direction:column;padding-top:16px}
+main>nav a{border-radius:10px;font-size:15px;padding:8px 14px}
+.phases{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:620px){.kpis,.res{grid-template-columns:1fr 1fr}.tools{grid-template-columns:1fr}.row .n{width:78px}.banner{padding:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.row .b{transition:none}}
+.figw .arN{fill:none;stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}.figw .arD{fill:none;stroke:var(--mut);stroke-width:2;stroke-dasharray:2 4}.figw .ahd{fill:var(--mut)}
+div.row{cursor:default}.row .n{width:130px}.row .c{width:78px}
+.row .bl{position:absolute;top:-3px;bottom:-3px;width:0;border-left:2px dashed var(--roseH)}
+@media (min-width:1200px){.wa{display:grid;grid-template-columns:repeat(5,1fr);gap:34px;padding:0 9px;text-align:center}.wa.r span{grid-column:5}.wa.l span{grid-column:1}.ws.rev{direction:rtl}.ws.rev .wb{direction:ltr}.ws.rev .wb:not(:last-child)::after{content:"←";right:auto;left:-25px}}
+#chart svg{display:block;width:100%;height:auto;font-family:var(--f)}
+@media (max-width:620px){.row .n{width:96px}.row .c{width:66px}.ctl{flex-wrap:wrap}.ctl label{flex-basis:100%}}
+</style>
+</head><body>
+<a href="https://bagusbernadi.github.io/" style="display:inline-block;margin:12px 16px;font:600 14px/1.4 'Source Sans 3',Arial,sans-serif;color:#1A73E8;text-decoration:none">← All projects / Semua project</a>
+<main>
+<nav aria-label="Section navigation"><a href="#s1">Background</a><a href="#s2">Business Questions</a><a href="#s3">Significance Test Flow</a><a href="#s4">Dataset</a><a href="#s5">Tools</a><a href="#s6">Work Plan</a><a href="#s7">Project Outputs</a><a href="#s8">Success Criteria</a><a href="#s9">Assumptions &amp; Limitations</a></nav>
+
+<header class="banner"><h1>Project 29: Root Cause Analysis Statistics</h1>
+<p class="goal"><b>Tujuan project:</b> menguji secara statistik apakah perbedaan defect rate antar shift, operator, lot material, dan supplier benar-benar nyata atau hanya variasi acak, lalu mengukur seberapa kuat setiap faktor terkait NG, agar investigasi difokuskan pada faktor yang terbukti dan tidak mengejar perbedaan yang hanya kebetulan.</p>
+<div class="tags"><span class="tlab">Kategori:</span><span class="tag a">Rancangan project</span><span class="tag c1">Manufaktur lampu LED</span><span class="tag c2">Data simulasi</span><span class="tag c3">Statistik + SQL + dashboard</span></div></header>
+
+<section class="card intro">
+<h3>Project Introduction</h3>
+<p>Bayangkan sebuah toko roti dengan beberapa tukang roti yang bekerja di shift pagi dan malam. Tepung datang dalam karung bernomor dari tiga pemasok. Suatu minggu banyak roti bantat. Semua orang punya dugaan: "pasti tukang roti baru", "pasti shift malam", "pasti tepung dari pemasok B".</p>
+<p>Pemilik toko tidak ingin menegur orang atau mengganti pemasok hanya berdasarkan dugaan. Ia ingin tahu dua hal: apakah perbedaannya benar-benar nyata atau hanya kebetulan, dan jika nyata, seberapa besar risikonya. Ia juga sadar bahwa jika terlalu banyak hal dibandingkan sekaligus, pasti ada yang tampak berbeda hanya karena kebetulan.</p>
+<div class="scroll"><table><tr><th>Di toko roti</th><th>Di pabrik lampu LED</th></tr>
+<tr><td>Roti bantat</td><td>Unit NG, misalnya LED mati atau lumen rendah</td></tr>
+<tr><td>Tukang roti</td><td>Operator di stasiun produksi</td></tr>
+<tr><td>Shift pagi dan malam</td><td>Shift 1 dan shift 2</td></tr>
+<tr><td>Karung tepung bernomor</td><td>Lot material, misalnya lot chip LED dan lot driver</td></tr>
+<tr><td>Pemasok tepung</td><td>Supplier material</td></tr>
+<tr><td>"Nyata atau kebetulan?"</td><td>Uji chi-square atau Fisher exact, dibaca lewat p-value</td></tr>
+<tr><td>"Berapa kali lebih berisiko?"</td><td>Odds ratio beserta confidence interval</td></tr>
+</table></div>
+<p>Project ini membangun <b>analisis akar masalah berbasis uji statistik</b>: data NG per unit beserta atributnya dikumpulkan, setiap faktor diuji dengan uji yang sesuai, hasilnya dikoreksi karena banyak perbandingan, lalu faktor yang terbukti ditampilkan di dashboard. Datanya simulasi, karena data pabrik bersifat rahasia. Kata bergaris bawah putus-putus kuning bisa diklik untuk melihat artinya.</p>
+<div class="layout">
+<h3>Gambaran alur kerja investigasi defect lampu LED</h3>
+<p class="lead">Investigasi defect bisa dibayangkan sebagai tiga jalur. Dua jalur pertama sudah berjalan di pabrik saat ini. Jalur ketiga adalah yang dibangun di project ini.</p>
+<div class="figw"><svg viewBox="0 0 1240 432" role="img" aria-label="Alur investigasi defect: jalur produksi dengan atribut lot, shift, dan operator; jalur investigasi berbasis dugaan; dan jalur data baru berupa data NG per unit, defect rate, uji signifikansi, odds ratio, dan dashboard"><defs><marker id="mN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="mA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aha" d="M0 0L10 5L0 10z"/></marker><marker id="mD" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ahd" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="lane" x="0" y="8" width="1240" height="130" rx="14"/><rect class="lane" x="0" y="150" width="1240" height="140" rx="14"/><rect class="lane" x="0" y="302" width="1240" height="128" rx="14"/>
+<text class="ln" x="18" y="66">Jalur</text><text class="ln" x="18" y="84">produksi</text>
+<text class="ln" x="18" y="212">Jalur</text><text class="ln" x="18" y="230">investigasi</text>
+<text class="ln" x="18" y="362">Jalur</text><text class="ln" x="18" y="380">data</text>
+<text class="gl" x="525" y="30" text-anchor="middle">Sudah ada: setiap unit punya lot, shift, dan operator</text>
+<rect class="box" x="150" y="45" width="210" height="62" rx="10"/><text class="bt b" x="255" y="71" text-anchor="middle">Material masuk</text><text class="st" x="255" y="91" text-anchor="middle">per lot, dari 3 supplier</text>
+<line class="ar" x1="360" x2="416" y1="76" y2="76" marker-end="url(#mN)"/>
+<rect class="box" x="420" y="45" width="210" height="62" rx="10"/><text class="bt b" x="525" y="71" text-anchor="middle">Produksi</text><text class="st" x="525" y="91" text-anchor="middle">2 shift, ±20 operator</text>
+<line class="ar" x1="630" x2="686" y1="76" y2="76" marker-end="url(#mN)"/>
+<rect class="box" x="690" y="45" width="210" height="62" rx="10"/><text class="bt b" x="795" y="71" text-anchor="middle">Inspeksi</text><text class="st" x="795" y="91" text-anchor="middle">NG dicatat per unit</text>
+<polyline class="arN" points="795,107 795,164 245,164 245,176" marker-end="url(#mA)"/>
+<rect class="box" x="150" y="180" width="190" height="60" rx="10"/><text class="bt b" x="245" y="206" text-anchor="middle">Rapat defect</text><text class="st" x="245" y="225" text-anchor="middle">NG naik minggu ini</text>
+<line class="ar" x1="340" x2="376" y1="210" y2="210" marker-end="url(#mN)"/>
+<rect class="box" x="380" y="180" width="190" height="60" rx="10"/><text class="bt b" x="475" y="206" text-anchor="middle">Menebak penyebab</text><text class="st" x="475" y="225" text-anchor="middle">"pasti shift malam"</text>
+<line class="ar" x1="570" x2="606" y1="210" y2="210" marker-end="url(#mN)"/>
+<rect class="box" x="610" y="180" width="190" height="60" rx="10"/><text class="bt b" x="705" y="206" text-anchor="middle">Tindakan</text><text class="st" x="705" y="225" text-anchor="middle">coba-coba</text>
+<line class="ar" x1="800" x2="836" y1="210" y2="210" marker-end="url(#mN)"/>
+<rect class="box" x="840" y="180" width="190" height="60" rx="10"/><text class="bt b" x="935" y="206" text-anchor="middle">Masalah muncul lagi</text><text class="st" x="935" y="225" text-anchor="middle">penyebab asli terlewat</text>
+<text class="nl" x="475" y="268" text-anchor="middle">keputusan berdasarkan dugaan, bukan bukti</text>
+<polyline class="arD" points="900,76 1190,76 1190,318 240,318 240,336" marker-end="url(#mD)"/><text class="st" x="1010" y="66" text-anchor="middle">catatan menjadi data</text>
+<rect class="box hi" x="150" y="340" width="180" height="62" rx="10"/><text class="bt b" x="240" y="366" text-anchor="middle">Data NG per unit</text><text class="st" x="240" y="386" text-anchor="middle">+ lot, shift, operator</text>
+<line class="ar" x1="330" x2="356" y1="371" y2="371" marker-end="url(#mN)"/>
+<rect class="box hi" x="360" y="340" width="180" height="62" rx="10"/><text class="bt b" x="450" y="366" text-anchor="middle">Defect rate</text><text class="st" x="450" y="386" text-anchor="middle">Pareto + CI</text>
+<line class="ar" x1="540" x2="566" y1="371" y2="371" marker-end="url(#mN)"/>
+<rect class="box hi" x="570" y="340" width="180" height="62" rx="10"/><text class="bt b" x="660" y="366" text-anchor="middle">Uji signifikansi</text><text class="st" x="660" y="386" text-anchor="middle">chi-square / Fisher</text>
+<line class="ar" x1="750" x2="776" y1="371" y2="371" marker-end="url(#mN)"/>
+<rect class="box hi" x="780" y="340" width="180" height="62" rx="10"/><text class="bt b" x="870" y="366" text-anchor="middle">Odds ratio</text><text class="st" x="870" y="386" text-anchor="middle">+ regresi logistik</text>
+<line class="ar" x1="960" x2="986" y1="371" y2="371" marker-end="url(#mN)"/>
+<rect class="box hi" x="990" y="340" width="180" height="62" rx="10"/><text class="bt b" x="1080" y="366" text-anchor="middle">Dashboard</text><text class="st" x="1080" y="386" text-anchor="middle">faktor yang terbukti</text>
+<line class="grp" x1="150" x2="1170" y1="410" y2="410"/><text class="gl" x="660" y="425" text-anchor="middle">Bagian yang dibangun di project ini</text>
+<circle class="mk" cx="150" cy="45" r="13"/><text class="mt" x="150" y="50" text-anchor="middle">1</text>
+<circle class="mk" cx="380" cy="180" r="13"/><text class="mt" x="380" y="185" text-anchor="middle">2</text>
+<circle class="mk" cx="360" cy="340" r="13"/><text class="mt" x="360" y="345" text-anchor="middle">3</text>
+<circle class="mk" cx="570" cy="340" r="13"/><text class="mt" x="570" y="345" text-anchor="middle">4</text>
+</svg></div>
+<ol class="legend">
+<li><b>Atribut produksi.</b> Setiap unit lampu tercatat dari lot material mana, dibuat di shift apa, dan oleh operator siapa, seperti roti yang bisa dilacak ke tukang roti dan karung tepungnya.</li>
+<li><b>Investigasi berbasis dugaan.</b> Saat NG naik, penyebab sering ditebak dari kesan sesaat. Tindakan diambil coba-coba, dan jika tebakannya salah, masalah muncul lagi.</li>
+<li><b>Defect rate dan Pareto.</b> Data NG per unit diringkas: defect apa yang paling banyak, dan berapa defect rate setiap shift, operator, lot, dan supplier beserta rentang ketidakpastiannya.</li>
+<li><b>Uji dan ukuran risiko.</b> Setiap faktor diuji apakah perbedaannya nyata, dikoreksi karena banyak perbandingan, lalu diukur seberapa besar risikonya dengan odds ratio.</li>
+</ol>
+</div>
+</section>
+
+<div class="kpis">
+<div class="card kpi" style="--h:var(--navyH)"><span class="v">14</span><span class="l">pertanyaan analisis</span><span class="d">Hal yang ingin dijawab, 9 di antaranya prioritas utama (bagian 2).</span></div>
+<div class="card kpi" style="--h:var(--amberH)"><span class="v">5</span><span class="l">faktor diuji</span><span class="d">Shift, operator, lot material, supplier, dan model lampu (bagian 3).</span></div>
+<div class="card kpi" style="--h:var(--tealH)"><span class="v">12</span><span class="l">langkah pengerjaan</span><span class="d">Dari menetapkan aturan uji sampai project siap ditinjau (bagian 6).</span></div>
+<div class="card kpi" style="--h:var(--plumH)"><span class="v">±20 / ±40</span><span class="l">operator / lot</span><span class="d">Sekitar 20 operator dan 40 lot chip LED dari 3 supplier.</span></div>
+<div class="card kpi" style="--h:var(--roseH)"><span class="v">±50.000</span><span class="l">unit diinspeksi</span><span class="d">Sekitar 6 bulan produksi, satu baris per unit.</span></div>
+<div class="card kpi" style="--h:var(--skyH)"><span class="v">4</span><span class="l">tabel data</span><span class="d">Hasil per unit, daftar lot, daftar operator, dan hasil uji (bagian 4).</span></div>
+</div>
+
+<h2 id="s1">1. Background<small>Kenapa tema ini dipilih</small></h2>
+<div class="card two">
+<div><h3>Latar belakang masalah</h3>
+<p>Di pabrik lampu LED, setiap kenaikan NG memicu pencarian penyebab. Data atribut per unit sebenarnya tersedia, tetapi perbandingannya jarang diuji secara statistik. Akibatnya:</p>
+<ul class="tight">
+<li>Perbedaan kecil antar operator atau shift dianggap masalah, padahal bisa saja hanya variasi acak dari jumlah unit yang sedikit.</li>
+<li>Saat puluhan operator dan lot dibandingkan sekaligus, beberapa pasti tampak "buruk" karena kebetulan. Tanpa koreksi, orang yang tidak bersalah bisa ditegur.</li>
+<li>Faktor yang saling terkait membingungkan. Shift malam bisa tampak buruk hanya karena operator baru ditempatkan di shift malam.</li>
+<li>Laporan hanya menyebut "lebih tinggi", tanpa ukuran seberapa besar risikonya, sehingga prioritas perbaikan sulit ditentukan.</li>
+</ul></div>
+<div><h3>Alasan memilih tema ini sebagai portofolio</h3>
+<ul class="tight">
+<li><b>Dekat dengan pekerjaan sehari-hari.</b> Investigasi defect dan rapat akar masalah adalah pekerjaan rutin di bagian proses, sehingga konteksnya mudah dijelaskan.</li>
+<li><b>Menunjukkan skill statistik terapan.</b> Uji chi-square, Fisher exact, odds ratio, koreksi multiple testing, effect size, dan regresi logistik yang dibaca sebagai penjelasan, bukan prediksi.</li>
+<li><b>Tingkat kesulitan menengah.</b> Uji statistiknya standar. Tantangannya ada pada memilih uji yang tepat, memeriksa syaratnya, dan menjelaskan batas kesimpulan dengan bahasa awam.</li>
+<li><b>Terhubung dengan project lain.</b> Data NG bisa diambil dari mart KPI Project 27 (Analytics Engineering Mini-Warehouse). Penilaian supplier dilanjutkan di Project 17 (Supplier Quality Scorecard), dan analisis before–after perbaikan di Project 4.</li>
+</ul></div>
+</div>
+
+<h2 id="s2">2. Business Questions<small>Satu pertanyaan utama, dipecah menjadi pertanyaan yang lebih kecil</small></h2>
+<div class="callout a"><h4>Pertanyaan utama</h4>Apakah perbedaan defect rate antar shift, operator, atau lot material benar-benar signifikan secara statistik, dan faktor mana yang paling kuat terkait dengan NG?</div>
+<p class="how">Pertanyaan utama terlalu besar untuk dijawab sekaligus, jadi dipecah per tema. Label "Utama" berarti wajib dijawab dan dikerjakan lebih dulu. "Pendukung" memperdalam hasil. "Tambahan" dikerjakan jika waktu tersisa. Teks abu-abu di bawah tiap pertanyaan adalah cara menjawabnya.</p>
+
+<div class="fbar" role="group" aria-label="Filter pertanyaan"><span>Tampilkan:</span><button type="button" class="fb on" data-f="*">Semua <i>14</i></button><button type="button" class="fb" data-f="M">Utama <i>9</i></button><button type="button" class="fb" data-f="S">Pendukung <i>4</i></button><button type="button" class="fb" data-f="N">Tambahan <i>1</i></button></div>
+<div class="qgrid" id="qg">
+<p class="theme">Gambaran: defect apa dan di mana</p>
+<div class="q" data-p="M"><span class="id">Q1</span><span>Jenis defect apa saja yang menyumbang sekitar 80% dari semua NG?<span class="pri M">Utama</span></span><span class="m">Pareto defect, kontribusi kumulatif</span></div>
+<div class="q" data-p="S"><span class="id">Q2</span><span>Di stasiun inspeksi mana NG paling banyak ditemukan?<span class="pri S">Pendukung</span></span><span class="m">NG per stasiun inspeksi</span></div>
+
+<p class="theme">Perbandingan: nyata atau kebetulan</p>
+<div class="q" data-p="M"><span class="id">Q3</span><span>Apakah defect rate shift 1 dan shift 2 berbeda secara signifikan?<span class="pri M">Utama</span></span><span class="m">Defect rate + CI, uji chi-square</span></div>
+<div class="q" data-p="M"><span class="id">Q4</span><span>Apakah ada operator yang defect rate-nya berbeda signifikan setelah dikoreksi karena banyak perbandingan?<span class="pri M">Utama</span></span><span class="m">Chi-square / Fisher per operator, koreksi Benjamini-Hochberg</span></div>
+<div class="q" data-p="M"><span class="id">Q5</span><span>Apakah lot material atau supplier tertentu menghasilkan NG lebih banyak secara signifikan?<span class="pri M">Utama</span></span><span class="m">Uji per lot dan per supplier, koreksi multiple testing</span></div>
+<div class="q" data-p="S"><span class="id">Q6</span><span>Apakah defect rate berbeda antar model 5W, 9W, dan 12W?<span class="pri S">Pendukung</span></span><span class="m">Tabel silang model × hasil, chi-square</span></div>
+
+<p class="theme">Kekuatan: seberapa besar risikonya</p>
+<div class="q" data-p="M"><span class="id">Q7</span><span>Untuk faktor yang signifikan, berapa kali lebih besar peluang NG-nya, dan seberapa yakin kita?<span class="pri M">Utama</span></span><span class="m">Odds ratio + 95% confidence interval</span></div>
+<div class="q" data-p="S"><span class="id">Q8</span><span>Seberapa besar efek setiap faktor secara keseluruhan, bukan hanya signifikan atau tidak?<span class="pri S">Pendukung</span></span><span class="m">Cramér's V</span></div>
+
+<p class="theme">Faktor mandiri: memisahkan faktor yang saling terkait</p>
+<div class="q" data-p="M"><span class="id">Q9</span><span>Jika semua faktor dilihat bersamaan, faktor mana yang tetap terkait dengan NG?<span class="pri M">Utama</span></span><span class="m">Regresi logistik, interpretasi koefisien sebagai odds ratio</span></div>
+<div class="q" data-p="S"><span class="id">Q10</span><span>Adakah faktor yang tampak signifikan sendirian, tetapi ternyata karena faktor lain?<span class="pri S">Pendukung</span></span><span class="m">Bandingkan hasil uji terpisah dengan regresi logistik</span></div>
+
+<p class="theme">Dampak: jika faktor diperbaiki</p>
+<div class="q" data-p="M"><span class="id">Q11</span><span>Berapa unit NG yang bisa dihindari jika faktor bermasalah diperbaiki ke tingkat baseline?<span class="pri M">Utama</span></span><span class="m">Unit NG terhindari = (rate faktor − rate baseline) × volume faktor</span></div>
+
+<p class="theme">Validitas: apakah kesimpulannya bisa dipercaya</p>
+<div class="q" data-p="M"><span class="id">Q12</span><span>Apakah semua faktor yang ditanam ditemukan, dan faktor yang hanya noise tidak dinyatakan signifikan?<span class="pri M">Utama</span></span><span class="m">Cocokkan hasil dengan ground truth</span></div>
+<div class="q" data-p="M"><span class="id">Q13</span><span>Apakah syarat uji terpenuhi, misalnya expected count minimal 5, dan berapa persen data yang tidak valid?<span class="pri M">Utama</span></span><span class="m">Cek expected count, ganti ke Fisher exact bila perlu; audit data</span></div>
+<div class="q" data-p="N"><span class="id">Q14</span><span>Berapa unit yang dibutuhkan agar perbedaan kecil antar operator bisa terdeteksi?<span class="pri">Tambahan</span></span><span class="m">Power analysis</span></div>
+</div>
+
+<h2 id="s3">3. Significance Test Flow<span class="add">Komponen tambahan</span><small>Bagaimana satu faktor diuji, dan kenapa jumlah unit menentukan kesimpulan</small></h2>
+<p class="how">Sebuah perbedaan baru dianggap nyata jika lolos uji yang tepat dan tetap signifikan setelah dikoreksi karena banyak perbandingan. Arahkan kursor atau klik kata yang diberi garis bawah kuning untuk melihat pengertian dan rumusnya.</p>
+<div class="flowfull"><h3>Alur pengujian satu faktor</h3>
+<div class="card"><div class="figw fl"><svg viewBox="0 0 1050 276" role="img" aria-label="Diagram percabangan: data NG diringkas per faktor, dicek apakah expected count minimal 5; jika ya memakai chi-square, jika tidak memakai Fisher exact; p-value dikoreksi, lalu dicek apakah tetap signifikan; jika ya dihitung odds ratio dan diinvestigasi, jika tidak dianggap noise"><defs><marker id="fN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="fT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aht" d="M0 0L10 5L0 10z"/></marker><marker id="fA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aha2" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="box" x="8" y="113" width="100" height="44" rx="10"/><text class="b2" x="58" y="140" text-anchor="middle">NG data</text>
+<line class="ar" x1="108" x2="128" y1="135" y2="135" marker-end="url(#fN)"/>
+<rect class="box" x="130" y="113" width="118" height="44" rx="10"/><text class="b2" x="189" y="132" text-anchor="middle">Rate per</text><text class="b2" x="189" y="148" text-anchor="middle">factor</text>
+<line class="ar" x1="248" x2="256" y1="135" y2="135" marker-end="url(#fN)"/>
+<polygon class="dia" points="258,135 320,97 382,135 320,173"/><text class="b2" x="320" y="132" text-anchor="middle">Expected</text><text class="b2" x="320" y="148" text-anchor="middle">≥ 5?</text>
+<polyline class="arT" points="320,97 320,40 396,40" marker-end="url(#fT)"/><text class="lt" x="328" y="74">Yes</text>
+<rect class="box" x="400" y="20" width="140" height="40" rx="10"/><text class="b2" x="470" y="45" text-anchor="middle">Chi-square</text>
+<polyline class="arA" points="320,173 320,250 396,250" marker-end="url(#fA)"/><text class="la" x="328" y="205">No</text>
+<rect class="box" x="400" y="230" width="140" height="40" rx="10"/><text class="b2" x="470" y="255" text-anchor="middle">Fisher exact</text>
+<polyline class="ar" style="fill:none" points="540,40 645,40 645,109" marker-end="url(#fN)"/>
+<polyline class="ar" style="fill:none" points="540,250 645,250 645,161" marker-end="url(#fN)"/>
+<rect class="box" x="580" y="113" width="130" height="44" rx="10"/><text class="b2" x="645" y="132" text-anchor="middle">Adjust</text><text class="b2" x="645" y="148" text-anchor="middle">p-value</text>
+<line class="ar" x1="710" x2="726" y1="135" y2="135" marker-end="url(#fN)"/>
+<polygon class="dia" points="728,135 790,97 852,135 790,173"/><text class="b2" x="790" y="132" text-anchor="middle">Still</text><text class="b2" x="790" y="148" text-anchor="middle">significant?</text>
+<polyline class="arT" points="790,97 790,40 866,40" marker-end="url(#fT)"/><text class="lt" x="798" y="74">Yes</text>
+<rect class="okb" x="870" y="20" width="172" height="40" rx="20"/><text class="wt" x="956" y="45" text-anchor="middle">Odds ratio, investigate</text>
+<polyline class="arA" points="790,173 790,250 866,250" marker-end="url(#fA)"/><text class="la" x="798" y="205">No</text>
+<rect class="scb" x="870" y="230" width="172" height="40" rx="20"/><text class="at" x="956" y="255" text-anchor="middle">Treat as noise</text>
+</svg></div>
+<p>Faktor yang dianggap noise tidak ditindaklanjuti dengan teguran atau penggantian supplier, tetapi tetap dipantau di periode berikutnya.</p></div></div>
+
+<h3>Kenapa jumlah unit menentukan apakah perbedaan terlihat nyata</h3>
+<p class="how">Setiap batang adalah defect rate satu lot chip LED (angka contoh, bukan hasil dari data). Garis biru tua di dalam batang adalah confidence interval 95%, dan garis merah putus-putus adalah rata-rata semua lot. Geser slider untuk mengubah jumlah unit per lot, lalu lihat kapan lot yang buruk mulai terbukti berbeda, dan kenapa koreksi multiple testing mencegah alarm palsu. Skala batang 0–5%.</p>
+<div class="card"><div id="bars"></div>
+<div class="ctl"><label for="sl">Unit per lot</label><input id="sl" type="range" min="100" max="5000" step="100" value="1000"><output id="slo" for="sl">1.000</output></div>
+<div class="res"><div>Lot signifikan tanpa koreksi<b id="r1"></b></div><div>Lot signifikan setelah koreksi<b id="r2"></b></div><div>Odds ratio lot terburuk (95% CI)<b id="r3"></b></div></div>
+<p id="ins" style="margin:12px 0 0;font-size:15.5px"></p></div>
+
+<h2 id="s4">4. Dataset<small>Data simulasi buatan sendiri yang meniru hasil inspeksi pabrik lampu LED</small></h2>
+<div class="two"><div class="card">
+<p><b>Kenapa data simulasi?</b> Data pabrik bersifat rahasia, dan data operator termasuk data pribadi. Program Python membuat hasil inspeksi per unit dengan pola yang meniru kondisi nyata, termasuk faktor yang benar-benar berpengaruh, faktor yang hanya kebetulan, dan faktor yang saling terkait. Karena polanya diketahui, kita bisa memeriksa apakah uji statistik menemukan yang benar dan menolak yang salah.</p>
+<p><b>Ukuran:</b> 3 model, 2 shift, sekitar 20 operator, sekitar 40 lot chip LED dari 3 supplier, sekitar 6 bulan. Perkiraan jumlah baris: ±50.000 unit diinspeksi dengan sekitar 2–3% NG. Jumlah pastinya baru diketahui setelah data dibuat.</p>
+<p class="src"><b>Sumber data:</b> data simulasi buatan sendiri, dibuat oleh skrip <code>scripts/generate_data.py</code> di repositori project (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan). Tidak memakai dataset publik atau data perusahaan. ID operator berupa kode, bukan nama.</p>
+</div>
+<div class="callout g"><h4>Fakta yang sengaja ditanam (ground truth)</h4>
+<p>1. Dua lot chip LED dari supplier B dibuat dengan defect rate sekitar 1,6 kali rata-rata, didominasi LED mati dan lumen rendah.</p>
+<p>2. Shift 2 tampak lebih tinggi NG-nya, tetapi penyebab sebenarnya adalah operator baru yang hanya ditempatkan di shift 2 (faktor yang saling terkait).</p>
+<p>3. Satu operator dibuat sedikit lebih tinggi NG-nya secara acak, tanpa pengaruh nyata. Uji yang benar seharusnya tidak menyatakannya signifikan setelah koreksi.</p>
+<p>4. Beberapa operator hanya mengerjakan kurang dari 100 unit, sehingga expected count kecil dan harus memakai Fisher exact.</p>
+<p>5. Sekitar 2–3% data kotor: lot kosong, kode operator salah ketik, dan baris ganda.</p></div></div>
+
+<h3>Empat tabel yang akan dibuat</h3>
+<p class="how">Data disimpan dalam beberapa tabel yang saling terhubung lewat kode lot dan kode operator. Tabel hasil uji menyimpan semua angka statistik, sehingga setiap kesimpulan di dashboard bisa ditelusuri.</p>
+<div class="scroll"><table>
+<tr><th>Tabel</th><th>Isi (1 baris = …)</th><th>Kolom utama</th></tr>
+<tr><td><b>unit_result</b></td><td>Satu unit lampu yang diinspeksi</td><td>serial_no, date, shift, operator_id, model, chip_lot, driver_lot, inspect_station, result (OK / NG), defect_code</td></tr>
+<tr><td><b>dim_lot</b></td><td>Satu lot material</td><td>lot_id, material, supplier, receive_date, qty</td></tr>
+<tr><td><b>dim_operator</b></td><td>Satu operator (kode, tanpa nama)</td><td>operator_id, start_date, experience_months, main_shift</td></tr>
+<tr><td><b>test_results</b></td><td>Satu uji untuk satu level faktor</td><td>factor, level, n, ng, rate, ci_low, ci_high, test, p_value, p_adj, odds_ratio, or_ci_low, or_ci_high</td></tr>
+</table></div>
+
+<div class="two"><div><h3>Contoh isi tabel unit_result</h3>
+<div class="scroll"><table class="sample"><tr><th>date</th><th>shift</th><th>operator_id</th><th>chip_lot</th><th>model</th><th>result</th></tr>
+<tr><td>2026-03-02</td><td>2</td><td>OP-14</td><td>B-0317</td><td>9W</td><td>NG</td></tr>
+<tr><td>2026-03-02</td><td>1</td><td>OP-03</td><td>A-0309</td><td>12W</td><td>OK</td></tr></table></div>
+<p class="note">Angka karangan, bukan data asli. Kolom serial_no, driver_lot, dan defect_code tidak ditampilkan agar tabel ringkas.</p></div>
+
+<div class="card"><p style="margin:0 0 6px"><b>Faktor yang diuji</b>:</p>
+<span class="chip">Shift (1, 2)</span><span class="chip">Operator (±20)</span><span class="chip">Lot chip LED (±40)</span><span class="chip">Supplier (A, B, C)</span><span class="chip">Model (5W, 9W, 12W)</span><span class="chip">Pengalaman operator</span>
+<p style="margin:10px 0 4px"><b>Contoh kode defect</b> (usulan awal, bisa disesuaikan): LED mati dan lumen rendah dari Photometric Test; flicker dan driver gagal dari Burn-in Test; solder void dan komponen bergeser dari AOI Inspection; casing retak dan lensa tergores dari inspeksi visual.</p></div></div>
+
+<h2 id="s5">5. Tools<small>Alat yang dipakai dan alasannya</small></h2>
+<div class="tools">
+<div class="card"><b>Python (pandas)</b><p class="r">Membuat data simulasi, membersihkan data, dan menyusun tabel silang untuk setiap faktor.</p><p class="alt">Bahasa paling umum di lowongan Data Analyst.</p></div>
+<div class="card"><b>SciPy</b><p class="r">Uji chi-square, Fisher exact, dan perhitungan expected count untuk memeriksa syarat uji.</p><p class="alt">Library statistik standar Python, hasilnya mudah dicek ulang di Excel.</p></div>
+<div class="card"><b>statsmodels</b><p class="r">Regresi logistik untuk faktor mandiri, koreksi multiple testing (Bonferroni dan Benjamini-Hochberg), dan confidence interval proporsi.</p><p class="alt">Memberi tabel koefisien lengkap dengan CI, cocok untuk interpretasi.</p></div>
+<div class="card"><b>DuckDB + SQL</b><p class="r">Menyimpan 4 tabel dan menghitung defect rate per faktor, Pareto, dan tabel silang.</p><p class="alt">Gratis, tanpa server, satu file. Konsisten dengan project lain di portofolio ini.</p></div>
+<div class="card"><b>Streamlit + Plotly</b><p class="r">Dashboard: Pareto defect, defect rate per faktor dengan CI, hasil uji, dan forest plot odds ratio.</p><p class="alt">Semua tetap di Python. Power BI di daftar portofolio butuh akun work/school untuk publish.</p></div>
+<div class="card"><b>Excel</b><p class="r">Cek silang: menghitung ulang defect rate dan p-value chi-square untuk satu faktor dengan CHISQ.TEST.</p><p class="alt">Membuktikan hasil Python sama dengan alat yang biasa dipakai di pabrik.</p></div>
+<div class="card"><b>Jupyter Notebook</b><p class="r">Mencatat setiap uji, syaratnya, hasilnya, dan batas kesimpulannya.</p><p class="alt">Mudah dibaca langsung di GitHub.</p></div>
+<div class="card"><b>GitHub</b><p class="r">Menyimpan kode, query, notebook, dan README.</p><p class="alt">Standar industri untuk portofolio dan riwayat perubahan kode.</p></div>
+<div class="card"><b>Markdown</b><p class="r">Menulis README berisi p-value, effect size, dan batas kesimpulan dengan bahasa awam.</p><p class="alt">Format teks sederhana yang tampil rapi otomatis di GitHub.</p></div>
+</div>
+
+<h2 id="s6">6. Work Plan<small>Setiap tahap punya warna sendiri. Label "beban besar" = langkah yang paling banyak memakan waktu</small></h2>
+<p class="how">Urutannya seperti membangun rumah: gambar rencana dulu, siapkan bahan, bangun fondasi, baru isi ruangan. Setiap langkah memakai hasil langkah sebelumnya, jadi urutannya tidak boleh dilompati.</p>
+
+<h3>Alur tahapan kerja</h3>
+<div class="card"><div class="wf">
+<div class="wrow"><div class="wl" style="--c:var(--navyH)"><h4>Tahap A · Perencanaan</h4><div class="ws" style="--k:2"><div class="wb"><span class="n">1</span><b>Aturan uji</b><span class="s">alpha, koreksi, minimal n</span></div><div class="wb"><span class="n">2</span><b>Skema tabel</b><span class="s">kamus data</span></div></div></div><div class="wl" style="--c:var(--tealH)"><h4>Tahap B · Menyiapkan data</h4><div class="ws" style="--k:3"><div class="wb L"><span class="n">3</span><b>Data simulasi</b><span class="s">+ ground truth</span></div><div class="wb"><span class="n">4</span><b>Membersihkan data</b><span class="s">Q13 · log cleaning</span></div><div class="wb"><span class="n">5</span><b>Muat ke database</b><span class="s">file DuckDB</span></div></div></div></div>
+<div class="wa r"><span>↓</span></div>
+<div class="wl" style="--c:var(--plumH)"><h4>Tahap C · Menghitung dan menganalisis</h4><div class="ws rev" style="--k:5"><div class="wb"><span class="n">6</span><b>Pareto &amp; defect rate</b><span class="s">Q1–Q2</span></div><div class="wb L"><span class="n">7</span><b>Uji per faktor</b><span class="s">Q3–Q6 · Q13</span></div><div class="wb"><span class="n">8</span><b>Odds ratio &amp; efek</b><span class="s">Q7–Q8</span></div><div class="wb L"><span class="n">9</span><b>Regresi logistik</b><span class="s">Q9–Q10</span></div><div class="wb"><span class="n">10</span><b>Dampak &amp; validasi</b><span class="s">Q11–Q12 · Q14</span></div></div></div>
+<div class="wa l"><span>↓</span></div>
+<div class="wrow1"><div class="wl" style="--c:var(--roseH)"><h4>Tahap D · Menyajikan</h4><div class="ws" style="--k:2"><div class="wb L"><span class="n">11</span><b>Membuat dashboard</b><span class="s">link dashboard</span></div><div class="wb"><span class="n">12</span><b>README &amp; finalisasi</b><span class="s">repositori siap</span></div></div></div></div>
+</div>
+<p class="note" style="text-align:center;margin-top:12px">Panah menunjukkan urutan pengerjaan. Angka di kotak sama dengan nomor langkah di bawah.</p></div>
+
+<div class="phases"><div class="ph" style="--ph:var(--navyH)"><p class="phase">Tahap A · Perencanaan</p>
+<ol class="steps">
+<li><b class="t">Menetapkan aturan uji</b><p>Menetapkan rumus defect rate, tingkat signifikansi 5%, metode koreksi multiple testing, syarat expected count, dan jumlah unit minimal agar sebuah level layak dibandingkan.</p><p class="meta">Hasil: dokumen aturan analisis · Alat: Markdown</p></li>
+<li><b class="t">Merancang struktur tabel</b><p>Menentukan 4 tabel, kolom, dan kolom penghubung. Membuat kamus data yang menjelaskan arti setiap kolom.</p><p class="meta">Hasil: kamus data · Alat: Markdown</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--tealH)"><p class="phase">Tahap B · Menyiapkan data</p>
+<ol class="steps" start="3" style="counter-reset:s 2">
+<li class="L"><b class="t">Membuat data simulasi</b><p>Program Python membuat ±50.000 unit dengan faktor yang benar-benar berpengaruh, faktor noise, faktor yang saling terkait, dan data kotor 2–3%.</p><p class="meta">Hasil: file CSV, skrip generator, catatan ground truth · Alat: Python</p></li>
+<li><b class="t">Memeriksa dan membersihkan data</b><p>Mencari lot kosong, kode operator salah ketik, dan baris ganda. Setiap keputusan dicatat (Q13).</p><p class="meta">Hasil: data bersih dan log cleaning · Alat: Python (pandas)</p></li>
+<li><b class="t">Memasukkan data ke database</b><p>Memuat data bersih dan tabel referensi lot serta operator ke DuckDB.</p><p class="meta">Hasil: file database · Alat: DuckDB</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--plumH)"><p class="phase">Tahap C · Menghitung dan menganalisis</p>
+<ol class="steps" style="counter-reset:s 5">
+<li><b class="t">Pareto dan defect rate dengan CI</b><p>Menyusun Pareto defect dan defect rate per shift, operator, lot, supplier, dan model beserta confidence interval (Q1–Q2).</p><p class="meta">Hasil: grafik Pareto dan tabel defect rate · Alat: SQL, Plotly</p></li>
+<li class="L"><b class="t">Menguji setiap faktor</b><p>Memeriksa expected count, menjalankan chi-square atau Fisher exact, lalu mengoreksi p-value karena banyak perbandingan (Q3–Q6, Q13).</p><p class="meta">Hasil: tabel test_results · Alat: SciPy, statsmodels</p></li>
+<li><b class="t">Menghitung odds ratio dan effect size</b><p>Untuk faktor yang tetap signifikan, menghitung odds ratio dengan 95% CI dan Cramér's V (Q7–Q8).</p><p class="meta">Hasil: forest plot dan tabel effect size · Alat: Python</p></li>
+<li class="L"><b class="t">Regresi logistik untuk faktor mandiri</b><p>Memasukkan semua faktor bersamaan untuk melihat faktor yang tetap terkait NG, dan membandingkan dengan hasil uji terpisah untuk menemukan faktor yang saling terkait (Q9–Q10).</p><p class="meta">Hasil: tabel koefisien sebagai odds ratio · Alat: statsmodels</p></li>
+<li><b class="t">Menghitung dampak dan memvalidasi</b><p>Menghitung unit NG terhindari dengan label estimasi, mencocokkan hasil dengan ground truth, mengecek silang dengan Excel, dan menghitung jumlah unit yang dibutuhkan (Q11, Q12, Q14).</p><p class="meta">Hasil: bagian validasi di README · Alat: Python, Excel</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--roseH)"><p class="phase">Tahap D · Menyajikan</p>
+<ol class="steps" style="counter-reset:s 10">
+<li class="L"><b class="t">Membuat dashboard</b><p>Dashboard 3 halaman: Pareto Defect, Perbandingan Faktor (defect rate + CI dan hasil uji), dan Faktor Terbukti (odds ratio dan dampak). Dipublikasikan agar bisa dibuka lewat link.</p><p class="meta">Hasil: link dashboard · Alat: Streamlit, Plotly</p></li>
+<li><b class="t">Menulis README, rekomendasi, dan finalisasi</b><p>Menulis masalah, data, analisis, rekomendasi, dampak, dan batasan. Mencantumkan p-value, effect size, dan batas kesimpulan dengan bahasa awam.</p><p class="meta">Hasil: repositori GitHub siap ditinjau · Alat: Markdown, GitHub</p></li>
+</ol></div></div>
+
+<h2 id="s7">7. Project Outputs<span class="add">Komponen tambahan</span><small>Hasil nyata yang bisa dibuka, dibaca, atau dipakai ulang setelah project selesai</small></h2>
+<p class="how">Setiap kartu adalah satu output. Label "Utama" berarti wajib dibuat, "Opsional" dibuat jika waktu tersisa. Setiap output ditujukan untuk pembaca yang berbeda, mulai dari manajemen sampai analis lain.</p>
+<div class="outs"><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>Dashboard interaktif</b><span class="ob">Utama</span></div><ul><li>Halaman web 3 bagian: Pareto Defect, Perbandingan Faktor, dan Faktor Terbukti.</li><li>Setiap faktor diberi label: terbukti, noise, atau data belum cukup.</li><li>Bentuk: link publik (Streamlit Community Cloud).</li><li>Untuk: engineer proses dan tim investigasi defect.</li></ul></div><div class="card out" style="--h:var(--roseH)"><div class="oh"><b>One-sheet faktor terbukti</b><span class="ob">Utama</span></div><ul><li>Ringkasan satu halaman: faktor yang terbukti, odds ratio, dan estimasi NG terhindari.</li><li>Bisa dipahami dalam waktu kurang dari 1 menit.</li><li>Bentuk: file PDF dan PNG.</li><li>Untuk: manajemen dan recruiter.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Database &amp; query SQL</b><span class="ob">Utama</span></div><ul><li>File DuckDB berisi 4 tabel: hasil per unit, lot, operator, dan hasil uji.</li><li>Query defect rate per faktor, Pareto, dan tabel silang.</li><li>Bentuk: file .duckdb dan folder query .sql.</li><li>Untuk: analis lain dan Project 17 sebagai sumber data.</li></ul></div><div class="card out" style="--h:var(--plumH)"><div class="oh"><b>Notebook statistik</b><span class="ob">Utama</span></div><ul><li>Semua uji Q1–Q14 dengan syarat, hasil, dan interpretasinya.</li><li>Dilengkapi cek silang dengan Excel.</li><li>Bentuk: Jupyter Notebook (.ipynb).</li><li>Untuk: pembaca teknis yang ingin memeriksa metode.</li></ul></div><div class="card out" style="--h:var(--skyH)"><div class="oh"><b>Tabel hasil uji</b><span class="ob">Utama</span></div><ul><li>Satu baris per level faktor: n, defect rate, CI, p-value, p-value terkoreksi, dan odds ratio.</li><li>Menjadi dasar label di dashboard.</li><li>Bentuk: file CSV dan tabel di README.</li><li>Untuk: tim yang ingin menelusuri setiap kesimpulan.</li></ul></div><div class="card out" style="--h:var(--amberH)"><div class="oh"><b>Generator data simulasi</b><span class="ob">Utama</span></div><ul><li>Skrip pembuat data per unit, termasuk faktor nyata, noise, dan faktor yang saling terkait.</li><li>Hasilnya selalu sama setiap dijalankan, dan efeknya bisa diatur.</li><li>Bentuk: skrip .py dan catatan ground truth.</li><li>Untuk: menguji metode dengan skenario baru.</li></ul></div><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>Laporan temuan &amp; rekomendasi</b><span class="ob">Utama</span></div><ul><li>Berisi masalah, data, temuan, rekomendasi, estimasi dampak, dan batasan.</li><li>Wajib mencantumkan p-value, effect size, dan batas kesimpulan.</li><li>Bentuk: README di GitHub.</li><li>Untuk: semua pembaca, sebagai pintu masuk project.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Repositori GitHub</b><span class="ob">Utama</span></div><ul><li>Semua output di atas tersusun dalam satu folder project yang rapi.</li><li>Dilengkapi petunjuk menjalankan ulang project.</li><li>Bentuk: link repositori GitHub.</li><li>Untuk: recruiter dan reviewer portofolio.</li></ul></div><div class="card out" style="--h:var(--roseH)"><div class="oh"><b>Slide presentasi</b><span class="ob opt">Opsional</span></div><ul><li>5–7 slide: dugaan awal, cara menguji, faktor terbukti, dan faktor yang ternyata noise.</li><li>Bentuk: PDF atau PowerPoint.</li><li>Untuk: presentasi saat wawancara kerja.</li></ul></div></div>
+
+<h3>Daftar dokumen yang akan dihasilkan</h3>
+<p class="how">Nama file adalah usulan awal dan bisa disesuaikan. Tabel diurutkan menurut tahap pengerjaan (A sampai D). File berukuran besar (data mentah dan database) tidak di-commit ke GitHub karena bisa dibuat ulang dari skrip.</p>
+<div class="scroll"><table class="docs"><tr><th>Nama dokumen</th><th>Isi</th><th>Tahap</th><th>Label</th></tr><tr><td><code>docs/analysis_rules.md</code></td><td>Aturan uji: alpha, koreksi, syarat expected count, minimal unit</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr><tr><td><code>docs/data_dictionary.md</code></td><td>Kamus data 4 tabel</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr><tr><td><code>scripts/generate_data.py</code></td><td>Skrip pembuat data simulasi (seed tetap)</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr><tr><td><code>data/raw/*.csv</code></td><td>Data simulasi mentah. Tidak di-commit, dibuat ulang dari skrip</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr><tr><td><code>data/ground_truth.json</code></td><td>Catatan faktor yang sengaja ditanam</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr><tr><td><code>docs/cleaning_log.md</code></td><td>Catatan baris bermasalah dan keputusannya</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr><tr><td><code>rca.duckdb</code></td><td>File database. Tidak di-commit, dibuat ulang dari skrip</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr><tr><td><code>sql/</code></td><td>Query defect rate, Pareto, dan tabel silang</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr><tr><td><code>notebooks/statistics.ipynb</code></td><td>Uji per faktor, odds ratio, regresi logistik</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr><tr><td><code>outputs/test_results.csv</code></td><td>Tabel hasil uji semua faktor</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr><tr><td><code>outputs/crosscheck.xlsx</code></td><td>Cek silang defect rate dan chi-square dengan Excel</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr><tr><td><code>dashboard/app.py</code></td><td>Aplikasi dashboard Streamlit (3 halaman)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr><tr><td><code>requirements.txt</code></td><td>Daftar library Python yang dibutuhkan</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr><tr><td><code>outputs/onesheet.pdf / .png</code></td><td>One-sheet faktor terbukti</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr><tr><td><code>README.md</code></td><td>Laporan temuan, rekomendasi, dampak, dan batasan</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr><tr><td><code>index.html</code></td><td>Halaman rancangan project ini (GitHub Pages)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr><tr><td><code>slides/presentation.pdf</code></td><td>Slide presentasi wawancara</td><td>Tahap D</td><td><span class="ob opt">Opsional</span></td></tr></table></div>
+
+<h2 id="s8">8. Success Criteria<span class="add">Komponen tambahan</span><small>Kapan project dianggap selesai dan berhasil</small></h2>
+<div class="card">
+<h3>Project dianggap berhasil jika</h3>
+<ul class="tight">
+<li>Kesembilan pertanyaan berlabel "Utama" terjawab dengan angka dari data.</li>
+<li>Defect rate dan p-value chi-square dari Python sama dengan hitungan ulang di Excel pada faktor yang dicek.</li>
+<li>Lot bermasalah ditemukan, efek shift berhasil dijelaskan oleh pengalaman operator, dan operator noise tidak dinyatakan signifikan setelah koreksi.</li>
+<li>Setiap uji mencatat syaratnya, dan uji Fisher exact dipakai ketika expected count kurang dari 5.</li>
+<li>README mencantumkan p-value, effect size, dan batas kesimpulan, dan orang awam bisa menyebutkan faktor yang terbukti dalam waktu kurang dari 1 menit.</li>
+<li>Checklist standar terpenuhi: pertanyaan bisnis, data cleaning, analisis SQL, dashboard ter-deploy, README berisi insight dan rekomendasi.</li>
+</ul></div>
+
+<h2 id="s9">9. Assumptions &amp; Limitations<span class="add">Komponen tambahan</span><small>Keputusan yang sudah diambil dan hal yang perlu diwaspadai</small></h2>
+<div class="two"><div><details open><summary>Jenis data: simulasi penuh <span class="pill">Sudah Anda setujui</span></summary><p>Semua data dibuat dengan program. Angka hasil akhir membuktikan bahwa metode bekerja, bukan menggambarkan kondisi pabrik sebenarnya. Operator ditulis sebagai kode.</p></details>
+<details><summary>Konteks: pabrik lampu LED <span class="pill">Sudah Anda setujui</span></summary><p>10 stasiun produksi dan 3 model (5W, 9W, 12W), sama dengan Project 26 dan 27 agar konsisten.</p></details>
+<details><summary>Tools: DuckDB + SQL + Streamlit + Plotly, SciPy, statsmodels <span class="pill">Sudah Anda setujui</span></summary><p>Daftar portofolio menulis SQLite dan Power BI sebagai pilihan; keduanya tidak dipakai. Kolom Tools di daftar sebaiknya diperbarui.</p></details></div>
+<div>
+<details><summary>Tingkat kesulitan: menengah <span class="pill">Sudah Anda setujui</span></summary><p>Uji statistiknya standar; tantangannya ada pada pemilihan uji dan penjelasan batas kesimpulan.</p></details>
+<details><summary>Ruang lingkup <span class="pill d">Usulan awal</span></summary><p>Tingkat signifikansi 5%. Benjamini-Hochberg sebagai koreksi utama, Bonferroni sebagai pembanding. Level dengan kurang dari 30 unit tidak diuji dan diberi label "data belum cukup". Dampak dihitung dalam unit NG, belum dalam rupiah.</p></details>
+<details><summary>Hal yang perlu diwaspadai <span class="pill d">Usulan awal</span></summary>
+<p><b>Pola belum tentu penyebab.</b> Uji statistik menunjukkan keterkaitan, bukan sebab. Faktor yang terbukti tetap perlu dicek di lapangan sebelum tindakan diambil.</p>
+<p><b>Banyak perbandingan.</b> Membandingkan puluhan operator dan lot sekaligus pasti menghasilkan beberapa perbedaan karena kebetulan. Karena itu koreksi multiple testing wajib.</p>
+<p><b>Faktor yang saling terkait.</b> Faktor yang tidak dicatat (misalnya mesin atau suhu ruangan) bisa menjadi penyebab sebenarnya.</p>
+<p><b>Signifikan belum tentu penting.</b> Dengan data sangat besar, perbedaan sangat kecil bisa signifikan. Karena itu odds ratio dan effect size selalu ditampilkan di samping p-value.</p>
+<p><b>Data operator sensitif.</b> Hasil per operator dipakai untuk perbaikan proses dan pelatihan, bukan untuk menilai orang. Hal ini ditulis di README.</p></details></div></div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id),f1=v=>(v*100).toFixed(1).replace('.',',')+'%',f2=v=>v.toFixed(1).replace('.',',');
+const erf=x=>{const t=1/(1+.3275911*Math.abs(x)),y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x);return x>=0?y:-y},cdf=z=>.5*(1+erf(z/Math.SQRT2));
+// defect rate per lot — angka contoh
+const L=[["Lot A-01",.020],["Lot A-02",.022],["Lot B-01",.019],["Lot B-02",.034],["Lot B-03",.021],["Lot C-01",.027],["Lot C-02",.020],["Lot C-03",.018]];
+const K=L.length,AVG=L.reduce((a,l)=>a+l[1],0)/K,sc=v=>Math.max(0,Math.min(100,v/.05*100));
+function draw(){const n=+$('sl').value;$('slo').textContent=n.toLocaleString('id-ID');
+const R=L.map(([nm,p],i)=>{const p0=(AVG*K-p)/(K-1),se=Math.sqrt(p*(1-p)/n+p0*(1-p0)/((K-1)*n)),z=(p-p0)/se,pv=2*(1-cdf(Math.abs(z))),h=1.96*Math.sqrt(p*(1-p)/n);return{nm,p,p0,pv,lo:Math.max(0,p-h),hi:p+h}});
+const raw=R.filter(r=>r.pv<.05),adj=R.filter(r=>r.pv<.05/K),w=R.reduce((b,r)=>r.p>b.p?r:b);
+const a=w.p*n,b=(1-w.p)*n,c=w.p0*(K-1)*n,d=(1-w.p0)*(K-1)*n,or=(a*d)/(b*c),s=Math.sqrt(1/a+1/b+1/c+1/d);
+$('bars').innerHTML=R.map(r=>`<div class="row${adj.includes(r)?' sel':''}"><span class="n">${r.nm}</span><span class="tr"><span class="b" style="width:${sc(r.p)}%"></span><span style="position:absolute;top:50%;height:4px;margin-top:-2px;left:${sc(r.lo)}%;width:${sc(r.hi)-sc(r.lo)}%;background:#0B2E6B;border-left:2px solid #0B2E6B;border-right:2px solid #0B2E6B"></span><span class="bl" style="left:${sc(AVG)}%"></span></span><span class="c">${f1(r.p)}</span></div>`).join('');
+$('r1').textContent=raw.length+' lot';$('r2').textContent=adj.length+' lot';$('r3').textContent=`${f2(or)} (${f2(or*Math.exp(-1.96*s))}–${f2(or*Math.exp(1.96*s))})`;
+const fp=raw.filter(r=>!adj.includes(r)).map(r=>r.nm);
+$('ins').innerHTML=adj.length==0?`Dengan <b>${n.toLocaleString('id-ID')} unit per lot</b>, rentang ketidakpastian masih terlalu lebar: ${w.nm} tampak paling tinggi, tetapi belum bisa dibedakan dari kebetulan. Confidence interval odds ratio-nya ${or*Math.exp(-1.96*s)<1?'masih mencakup angka 1':'masih lebar'}, jadi belum layak dijadikan dasar tindakan.`
+:`Dengan <b>${n.toLocaleString('id-ID')} unit per lot</b>, <b>${w.nm}</b> terbukti berbeda bahkan setelah koreksi, dengan peluang NG sekitar ${f2(or)} kali lot lain.${fp.length?` ${fp.join(' dan ')} juga tampak signifikan tanpa koreksi, tetapi tidak lolos setelah dikoreksi karena 8 lot dibandingkan sekaligus. Inilah alarm palsu yang dicegah koreksi multiple testing.`:''}`}
+$('sl').oninput=draw;draw();
+const G=[["defect rate","i","Persentase unit yang NG.\nRumus: defect rate = unit NG ÷ unit diinspeksi.\nContoh: 25 NG dari 1.000 unit, defect rate = 2,5%."],["NG","","Not Good: produk yang gagal pemeriksaan."],["lot","i","Satu kelompok material yang diterima bersamaan dari supplier, dengan nomor yang sama."],["supplier","i","Pemasok material, misalnya pemasok chip LED."],["shift","i","Pembagian jam kerja, misalnya shift 1 dan shift 2."],["operator","i","Pekerja yang menjalankan proses di stasiun produksi. Di project ini ditulis sebagai kode."],["chi-square","i","Uji statistik untuk melihat apakah proporsi (misalnya NG) berbeda antar kelompok lebih dari yang bisa dijelaskan kebetulan."],["Fisher exact","i","Uji pengganti chi-square untuk sampel kecil, ketika expected count kurang dari 5."],["p-value","i","Peluang mendapat perbedaan sebesar ini jika sebenarnya tidak ada perbedaan. Makin kecil, makin kecil kemungkinan perbedaannya hanya kebetulan.\nAturan di project ini: signifikan jika p < 0,05 setelah koreksi."],["odds ratio","i","Perbandingan peluang NG satu kelompok dengan kelompok pembanding.\nRumus: odds ratio = (NG₁ ÷ OK₁) ÷ (NG₀ ÷ OK₀).\nContoh: odds ratio 1,6 berarti peluang NG sekitar 1,6 kali kelompok pembanding."],["confidence interval","i","Rentang nilai yang kemungkinan besar memuat nilai sebenarnya. CI 95% berarti metode ini menangkap nilai sebenarnya 95 dari 100 kali."],["CI","","Confidence interval: rentang nilai yang kemungkinan besar memuat nilai sebenarnya."],["multiple testing","i","Melakukan banyak uji sekaligus. Makin banyak uji, makin besar peluang ada hasil signifikan yang hanya kebetulan."],["koreksi","i","Penyesuaian p-value saat banyak uji dilakukan sekaligus, agar alarm palsu tidak bertambah."],["Bonferroni","i","Koreksi multiple testing paling ketat.\nRumus: batas signifikan = 0,05 ÷ jumlah uji."],["Benjamini-Hochberg","i","Koreksi multiple testing yang mengendalikan proporsi temuan palsu di antara hasil yang signifikan. Lebih longgar dari Bonferroni."],["expected count","i","Jumlah yang diharapkan di setiap sel tabel silang jika tidak ada perbedaan antar kelompok.\nRumus: expected = total baris × total kolom ÷ total keseluruhan."],["Cramér's V","i","Ukuran besar keterkaitan dua variabel kategori, skala 0 (tidak terkait) sampai 1 (sangat terkait)."],["effect size","i","Ukuran seberapa besar sebuah perbedaan, terpisah dari apakah perbedaan itu signifikan."],["regresi logistik","i","Model statistik untuk melihat pengaruh beberapa faktor sekaligus terhadap hasil ya/tidak, misalnya NG atau OK. Koefisiennya bisa dibaca sebagai odds ratio."],["Pareto","i","Cara mengurutkan masalah dari yang paling sering. Biasanya sedikit jenis masalah menyumbang sebagian besar kejadian (aturan 80/20)."],["signifikan","i","Perbedaan yang kecil kemungkinannya terjadi hanya karena kebetulan, berdasarkan uji statistik."],["noise","i","Variasi acak yang tidak punya penyebab khusus."],["tabel silang","i","Tabel yang menghitung jumlah untuk setiap kombinasi dua kategori, misalnya shift × hasil OK/NG."],["forest plot","i","Grafik yang menampilkan odds ratio beberapa faktor beserta CI-nya dalam satu gambar."],["power analysis","i","Perhitungan jumlah sampel yang dibutuhkan agar perbedaan sebesar tertentu bisa terdeteksi."],["ground truth","i","Fakta yang sengaja ditanam di data simulasi untuk memeriksa apakah analisis berhasil menemukannya."],["data simulasi","i","Data buatan komputer yang meniru kondisi nyata, bukan hasil pencatatan di pabrik."],["SQL","","Bahasa untuk meminta dan mengolah data dari tabel database."],["DuckDB","i","Database ringan dalam satu file, untuk menjalankan SQL tanpa server."],["dashboard","i","Halaman ringkasan interaktif berisi grafik dan angka kunci."],["Streamlit","i","Alat untuk membuat dashboard web memakai Python."],["SciPy","","Library Python untuk perhitungan ilmiah dan uji statistik."],["statsmodels","","Library Python untuk model statistik, termasuk regresi logistik dan koreksi multiple testing."],["kamus data","i","Dokumen yang menjelaskan arti, satuan, dan contoh isi setiap kolom."],["README","","Dokumen penjelasan project yang dibaca pertama kali di repositori GitHub."],["unit NG terhindari","i","Estimasi unit NG yang tidak terjadi jika faktor bermasalah diperbaiki.\nRumus: unit NG terhindari = (defect rate faktor − defect rate baseline) × volume faktor."]];
+
+const TERMS=G.map(([t,f,d])=>({t,d,re:new RegExp('(?<![\\w-])'+t.replace(/[.*+?^${}()|[\]\\\/-]/g,'\\$&')+'(?![\\w-])',f)}));
+const SK='svg,.fx,.fbar,.oh,.wb,table td:first-child,h1,h2,h3,nav,button,script,style,summary,.tm,.tag,.pri,.pill,.v,.l,.chip,.flow,th,#tip,.banner,.theme,.phase,.add,.tools b,b.t,code,.ctl,.res,#bars,#ins,#chart';
+function wrapT(n,seen){let b=null;for(const x of TERMS){if(seen.has(x.t))continue;const m=x.re.exec(n.data);if(m&&(!b||m.index<b.i||(m.index==b.i&&m[0].length>b.l)))b={x,i:m.index,l:m[0].length}}
+if(!b)return;seen.add(b.x.t);const r=n.splitText(b.i),a=r.splitText(b.l),s=document.createElement('span');s.className='tm';s.tabIndex=0;s.dataset.d=b.x.d;s.textContent=r.data;r.replaceWith(s);wrapT(a,seen)}
+function hl(root,seen){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest(SK)?3:1}),ns=[];while(w.nextNode())ns.push(w.currentNode);ns.forEach(n=>wrapT(n,seen))}
+const tip=document.createElement('div');tip.id='tip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function showT(e){tip.textContent=e.dataset.d;tip.style.display='block';const r=e.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px';tip.style.top=(r.bottom+h+12>innerHeight?r.top-h-6:r.bottom+6)+'px'}
+document.addEventListener('click',ev=>{const t=ev.target.closest('.tm');t?showT(t):tip.style.display='none'});
+document.addEventListener('mouseover',ev=>{const t=ev.target.closest('.tm');if(t)showT(t)});
+document.addEventListener('mouseout',ev=>{if(ev.target.closest&&ev.target.closest('.tm'))tip.style.display='none'});
+document.addEventListener('focusin',ev=>{const t=ev.target.closest&&ev.target.closest('.tm');if(t)showT(t)});
+addEventListener('scroll',()=>tip.style.display='none',{passive:true});
+const qg=$('qg');document.querySelector('.fbar').onclick=e=>{const b=e.target.closest('.fb');if(!b)return;const f=b.dataset.f;
+document.querySelectorAll('.fb').forEach(x=>x.classList.toggle('on',x==b));let th=null,vis=0;
+[...qg.children].forEach(el=>{if(el.classList.contains('theme')){if(th)th.hidden=!vis;th=el;vis=0}else{const show=f=='*'||el.dataset.p==f;el.hidden=!show;if(show)vis++}});if(th)th.hidden=!vis};
+let seen=new Set();[...document.querySelector('main').children].forEach(el=>{if(el.tagName=='H2')seen=new Set();hl(el,seen)});
+</script>
+</body></html>
