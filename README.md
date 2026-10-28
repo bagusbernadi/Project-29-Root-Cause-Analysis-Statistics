@@ -21,7 +21,7 @@ Rancangan memecahnya menjadi 14 pertanyaan (9 Utama, 4 Pendukung, 1 Tambahan) da
 
 ## 2. Data
 
-- Sumber: data simulasi buatan sendiri, dibuat oleh `scripts/generate_data.py` (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan). Tidak memakai dataset publik atau data perusahaan. Operator ditulis sebagai kode.
+- Sumber: data simulasi buatan sendiri, dibuat oleh `scripts/generate_data.py` (Versi: v1; Tanggal dibuat: 28 Okt 2026; Seed: 29260302). Tidak memakai dataset publik atau data perusahaan. Operator ditulis sebagai kode.
 - Konteks: lampu LED model 5W, 9W, dan 12W; 2 shift; ±20 operator; ±40 lot chip LED dari 3 supplier.
 - Ukuran (perkiraan): ±50.000 unit diinspeksi selama ±6 bulan, dengan sekitar 2–3% NG.
 - Rencana tabel: `unit_result`, `dim_lot`, `dim_operator`, `test_results`.
