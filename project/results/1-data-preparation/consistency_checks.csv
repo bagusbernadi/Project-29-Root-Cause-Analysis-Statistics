@@ -1,0 +1,7 @@
+check,violations
+OK tanpa defect_code,0
+NG dengan defect_code,0
+tanggal di luar periode,0
+shift tidak valid,0
+model tidak valid,0
+unit_id ganda setelah R1,0

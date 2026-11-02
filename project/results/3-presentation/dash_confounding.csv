@@ -1,0 +1,3 @@
+comparison,rate_shift2,rate_shift1,n_shift2,n_shift1,p_value,odds_ratio,or_low,or_high
+"Shift 2 vs Shift 1, semua unit",0.027414,0.023978,25060,24940,0.015176,1.147368,1.026776,1.282123
+Shift 2 tanpa OP19 vs Shift 1,0.022956,0.023978,22173,24940,0.464928,0.956388,0.848571,1.077904

@@ -1,0 +1,13 @@
+model,term,odds_ratio,or_low,or_high,p_value,p_adj
+Terpisah: shift,Shift 2,1.146006,1.024938,1.281375,0.01674,0.01674
+Terpisah: model,Model 5W,0.951086,0.833604,1.085125,0.455955,0.455955
+Terpisah: model,Model 12W,1.161675,1.012105,1.333349,0.033084,0.066167
+Terpisah: supplier,Supplier B,1.14272,0.998272,1.308069,0.053005,0.106009
+Terpisah: supplier,Supplier C,1.058585,0.922375,1.214909,0.417857,0.417857
+Terpisah: pengalaman operator,Operator baru,2.743221,2.332152,3.226747,0.0,0.0
+Bersamaan: shift + model + supplier + pengalaman,Shift 2,0.955629,0.847587,1.077443,0.458434,0.458434
+Bersamaan: shift + model + supplier + pengalaman,Model 5W,0.94605,0.829,1.079625,0.410495,0.458434
+Bersamaan: shift + model + supplier + pengalaman,Model 12W,1.162446,1.012526,1.334565,0.032626,0.092549
+Bersamaan: shift + model + supplier + pengalaman,Supplier B,1.147581,1.002276,1.313952,0.046275,0.092549
+Bersamaan: shift + model + supplier + pengalaman,Supplier C,1.05921,0.922702,1.215914,0.413845,0.458434
+Bersamaan: shift + model + supplier + pengalaman,Operator baru,2.817224,2.366757,3.353428,0.0,0.0

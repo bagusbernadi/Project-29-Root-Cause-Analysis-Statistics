@@ -1,0 +1,7 @@
+factor,label,detail
+shift,Dijelaskan faktor lain,"Tampak signifikan sendirian (p 0.015), hilang tanpa OP19 (p 0.46)"
+operator_id,Terbukti,OP19 (OR 2.73)
+lot_id,Noise,Tidak ada level yang lolos koreksi (p BH terkecil 0.70)
+supplier,Noise,Tidak ada level yang lolos koreksi (p BH terkecil 0.13)
+model,Terbukti,12W (OR 1.18)
+experience,Terbukti,baru (OR 2.74)

@@ -1,0 +1,17 @@
+scope,rate_multiplier,alpha_rule,alpha_used,n_needed_per_level,n_median_actual,power_at_actual_n
+Lot chip LED (40 uji),1.3,"tanpa koreksi (0,05)",0.05,3867.813685,1152.5,0.3335963741
+Lot chip LED (40 uji),1.3,"Bonferroni (0,05 / jumlah uji)",0.00125,8158.307804,1152.5,0.04476200305
+Lot chip LED (40 uji),1.6,"tanpa koreksi (0,05)",0.05,1078.878747,1152.5,0.8252683745
+Lot chip LED (40 uji),1.6,"Bonferroni (0,05 / jumlah uji)",0.00125,2275.658968,1152.5,0.370085897
+Lot chip LED (40 uji),2,"tanpa koreksi (0,05)",0.05,439.1297563,1152.5,0.9950412526
+Lot chip LED (40 uji),2,"Bonferroni (0,05 / jumlah uji)",0.00125,926.2482659,1152.5,0.9051451408
+Lot chip LED (40 uji),2.6,"tanpa koreksi (0,05)",0.05,199.4202629,1152.5,0.9999991017
+Lot chip LED (40 uji),2.6,"Bonferroni (0,05 / jumlah uji)",0.00125,420.633465,1152.5,0.9997740902
+Operator (20 uji),1.3,"tanpa koreksi (0,05)",0.05,3969.598255,2505.5,0.6048138816
+Operator (20 uji),1.3,"Bonferroni (0,05 / jumlah uji)",0.0025,7554.931886,2505.5,0.2125551493
+Operator (20 uji),1.6,"tanpa koreksi (0,05)",0.05,1107.270293,2505.5,0.9879119439
+Operator (20 uji),1.6,"Bonferroni (0,05 / jumlah uji)",0.0025,2107.354725,2505.5,0.8831617145
+Operator (20 uji),2,"tanpa koreksi (0,05)",0.05,450.6858025,2505.5,0.999998305
+Operator (20 uji),2,"Bonferroni (0,05 / jumlah uji)",0.0025,857.7443676,2505.5,0.9998296947
+Operator (20 uji),2.6,"tanpa koreksi (0,05)",0.05,204.6681627,2505.5,1
+Operator (20 uji),2.6,"Bonferroni (0,05 / jumlah uji)",0.0025,389.5240603,2505.5,1

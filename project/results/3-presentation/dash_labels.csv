@@ -1,0 +1,7 @@
+factor,label,detail,factor_label
+shift,Dijelaskan faktor lain,"Tampak signifikan sendirian (p 0.015), hilang tanpa OP19 (p 0.46)",Shift
+operator_id,Terbukti,OP19 (OR 2.73),Operator
+lot_id,Noise,Tidak ada level yang lolos koreksi (p BH terkecil 0.70),Lot chip LED
+supplier,Noise,Tidak ada level yang lolos koreksi (p BH terkecil 0.13),Supplier
+model,Terbukti,12W (OR 1.18),Model lampu
+experience,Terbukti,baru (OR 2.74),Pengalaman operator

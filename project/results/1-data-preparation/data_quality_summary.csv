@@ -1,0 +1,2 @@
+table,raw_rows,clean_rows,bad_rows,bad_pct,rows_without_operator,rows_without_lot,complete_case_rows
+unit_result,50312,50000,1250,2.4845,313,312,49375

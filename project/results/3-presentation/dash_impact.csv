@@ -1,0 +1,4 @@
+factor,level,n,ng,rate,baseline_rate,ng_avoided_period,ng_avoided_low,ng_avoided_high,ng_avoided_year,share_of_all_ng,label
+operator_id,OP19,2887,178,0.0617,0.0235,110.0815,86.3939,137.1323,220.1629,0.0861,"estimated, simulated"
+model,12W,12442,360,0.0289,0.0246,53.5713,18.6956,92.065,107.1426,0.0417,"estimated, simulated"
+experience,baru,2926,181,0.0619,0.0235,112.2943,88.3966,139.5537,224.5886,0.0878,"estimated, simulated"

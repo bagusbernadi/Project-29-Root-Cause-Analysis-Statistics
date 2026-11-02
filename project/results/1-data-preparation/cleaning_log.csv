@@ -1,0 +1,6 @@
+rule,problem,rows_found,rows_planted,rows_dropped,rows_fixed,decision,match_ground_truth
+R1,Baris ganda (unit_id sama),312,312,312,0,"Baris kedua dibuang, satu baris per unit dipertahankan",ya
+R2,"Hasil tidak baku (ok, PASS, ng, FAIL, spasi)",313,313,0,313,Dibakukan menjadi OK atau NG,ya
+R3,operator_id kosong,313,313,0,0,Baris dipertahankan; dikeluarkan hanya dari uji per operator dan regresi,ya
+R4,lot_id tidak dikenal (LX99),312,312,0,0,"Baris dipertahankan; lot dan supplier dikosongkan, dikeluarkan hanya dari uji per lot/supplier dan regresi",ya
+R5,Pemeriksaan konsistensi (6 aturan),0,0,0,0,Tidak ada pelanggaran; data tidak diubah,ya

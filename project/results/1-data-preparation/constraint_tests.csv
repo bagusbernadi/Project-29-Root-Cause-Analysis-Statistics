@@ -1,0 +1,9 @@
+test,outcome
+hasil bukan OK atau NG,ditolak
+model tidak dikenal,ditolak
+shift tidak dikenal,ditolak
+unit_id ganda,ditolak
+operator tidak ada di dim_operator,ditolak
+lot tidak ada di dim_lot,ditolak
+NG tanpa defect_code,ditolak
+OK dengan defect_code,ditolak

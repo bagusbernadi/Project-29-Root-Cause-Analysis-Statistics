@@ -1,0 +1,6 @@
+fact_no,fakta,ditemukan,hasil
+1,"Dua lot Supplier B punya defect rate ±1,6x rata-rata","LB11 dan LB29 adalah satu-satunya lot dengan p-value mentah di bawah 0.05 (p 0.040 dan 0.019), tetapi tidak ada lot yang lolos koreksi (p BH terkecil 0.70); uji rasio kemungkinan semua lot p 0.47; Supplier B p BH 0.13",Sebagian
+2,Efek shift sebenarnya berasal dari operator baru (hanya Shift 2),"Shift 2 tampak lebih tinggi (p 0.015); tanpa OP19 selisih hilang (p 0.46) dan setelah dikontrol pengalaman operator odds ratio shift 0.96 (p 0.46); OP19 odds ratio 2.7, p BH < 0.001",Sesuai
+3,"Operator noise: sedikit lebih tinggi secara acak, tidak boleh signifikan setelah koreksi","OP08 defect rate 4.31%: p mentah 0.018 (tampak signifikan), p BH 0.18 (tidak signifikan setelah koreksi); 3 dari 20 operator signifikan tanpa koreksi, 1 setelah koreksi",Sesuai
+4,"Beberapa operator hanya mengerjakan kurang dari 100 unit, sehingga butuh Fisher exact","Hanya satu operator (OP20, 39 unit, expected count minimal 1.0) yang memakai Fisher exact; p 0.079. Operator lain punya paling sedikit 464 unit",Sebagian
+5,Sekitar 2-3% data kotor,1.250 baris bermasalah (2.5%); seluruhnya ditemukan dan sama persis dengan unit_id yang ditanam (R1 sampai R4),Sesuai

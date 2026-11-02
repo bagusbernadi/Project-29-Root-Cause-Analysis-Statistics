@@ -1,0 +1,62 @@
+{
+  "seed": 29260302,
+  "version": "v1",
+  "n_units_clean": 50000,
+  "rows_with_dirt": 50312,
+  "ng_rate_pct_clean": 2.57,
+  "facts": [
+    {
+      "id": 1,
+      "fact": "Dua lot Supplier B punya defect rate +-1,6x rata-rata",
+      "lots": [
+        "LB11",
+        "LB29"
+      ],
+      "factor": 1.6
+    },
+    {
+      "id": 2,
+      "fact": "Efek shift sebenarnya berasal dari operator baru (hanya Shift 2)",
+      "operator": "OP19",
+      "shift": "Shift 2",
+      "start_day": 20,
+      "share": 0.14,
+      "factor": 2.6,
+      "ng_rate_pct": {
+        "Shift 1": 2.398,
+        "Shift 2": 2.741,
+        "Shift 2 tanpa OP19": 2.292
+      }
+    },
+    {
+      "id": 3,
+      "fact": "Operator noise: sampel kecil, efek tidak terdeteksi",
+      "operator": "OP08",
+      "share_s1": 0.016,
+      "factor": 1.6,
+      "n_units": 464
+    },
+    {
+      "id": 4,
+      "fact": "Operator sampel kecil (butuh Fisher exact)",
+      "operator": "OP20",
+      "n": 40,
+      "days": [
+        100,
+        101
+      ],
+      "ng": 3
+    },
+    {
+      "id": 5,
+      "fact": "Data kotor",
+      "rate": 0.025,
+      "types": [
+        "blank_operator",
+        "result_variant",
+        "unknown_lot",
+        "duplicate_row"
+      ]
+    }
+  ]
+}

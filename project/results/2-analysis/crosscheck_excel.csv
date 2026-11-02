@@ -1,0 +1,66 @@
+scope,python,excel,status
+shift: p-value chi-square keseluruhan,0.01517562694,0.0151756269397992,PASS
+shift = Shift 1: n dan NG,24940/598,24940/598,PASS
+shift = Shift 1: defect rate,0.023977546110665597,0.0239775461106656,PASS
+shift = Shift 2: n dan NG,25060/687,25060/687,PASS
+shift = Shift 2: defect rate,0.02741420590582602,0.027414205905826,PASS
+model: p-value chi-square keseluruhan,0.02492936237,0.0249293623733089,PASS
+model = 12W: n dan NG,12442/360,12442/360,PASS
+model = 12W: defect rate,0.02893425494293522,0.0289342549429352,PASS
+model = 5W: n dan NG,17639/424,17639/424,PASS
+model = 5W: defect rate,0.02403764385736153,0.0240376438573615,PASS
+model = 9W: n dan NG,19919/501,19919/501,PASS
+model = 9W: defect rate,0.02515186505346654,0.0251518650534665,PASS
+supplier: p-value chi-square keseluruhan,0.1224285494,0.122428549408308,PASS
+supplier = Supplier A: n dan NG,17623/424,17623/424,PASS
+supplier = Supplier A: defect rate,0.024059467741020257,0.0240594677410203,PASS
+supplier = Supplier B: n dan NG,16054/443,16054/443,PASS
+supplier = Supplier B: defect rate,0.027594369004609442,0.0275943690046094,PASS
+supplier = Supplier C: n dan NG,16011/410,16011/410,PASS
+supplier = Supplier C: defect rate,0.025607394915995254,0.0256073949159953,PASS
+experience: p-value chi-square keseluruhan,4.748422196e-37,4.74842219566121e-37,PASS
+experience = baru: n dan NG,2926/181,2926/181,PASS
+experience = baru: defect rate,0.06185919343814081,0.0618591934381408,PASS
+experience = berpengalaman: n dan NG,46761/1098,46761/1098,PASS
+experience = berpengalaman: defect rate,0.02348110604991339,0.0234811060499134,PASS
+operator_id: p-value chi-square keseluruhan,6.537551133000001e-28,6.53755113270141e-28,PASS
+operator_id = OP01: n dan NG,3018/67,3018/67,PASS
+operator_id = OP01: defect rate,0.022200132538104704,0.0222001325381047,PASS
+operator_id = OP02: n dan NG,3075/73,3075/73,PASS
+operator_id = OP02: defect rate,0.023739837398373983,0.023739837398374,PASS
+operator_id = OP03: n dan NG,3114/76,3114/76,PASS
+operator_id = OP03: defect rate,0.024405908798972382,0.0244059087989724,PASS
+operator_id = OP04: n dan NG,2943/73,2943/73,PASS
+operator_id = OP04: defect rate,0.024804621134896364,0.0248046211348964,PASS
+operator_id = OP05: n dan NG,3009/84,3009/84,PASS
+operator_id = OP05: defect rate,0.027916251246261216,0.0279162512462612,PASS
+operator_id = OP06: n dan NG,3043/60,3043/60,PASS
+operator_id = OP06: defect rate,0.019717384160368057,0.0197173841603681,PASS
+operator_id = OP07: n dan NG,2926/64,2926/64,PASS
+operator_id = OP07: defect rate,0.021872863978127138,0.0218728639781271,PASS
+operator_id = OP08: n dan NG,464/20,464/20,PASS
+operator_id = OP08: defect rate,0.04310344827586207,0.0431034482758621,PASS
+operator_id = OP09: n dan NG,3145/76,3145/76,PASS
+operator_id = OP09: defect rate,0.024165341812400636,0.0241653418124006,PASS
+operator_id = OP10: n dan NG,2427/52,2427/52,PASS
+operator_id = OP10: defect rate,0.021425628347754428,0.0214256283477544,PASS
+operator_id = OP11: n dan NG,2444/58,2444/58,PASS
+operator_id = OP11: defect rate,0.023731587561374796,0.0237315875613748,PASS
+operator_id = OP12: n dan NG,2507/70,2507/70,PASS
+operator_id = OP12: defect rate,0.02792181890706023,0.0279218189070602,PASS
+operator_id = OP13: n dan NG,2407/52,2407/52,PASS
+operator_id = OP13: defect rate,0.02160365600332364,0.0216036560033236,PASS
+operator_id = OP14: n dan NG,2468/54,2468/54,PASS
+operator_id = OP14: defect rate,0.02188006482982172,0.0218800648298217,PASS
+operator_id = OP15: n dan NG,2435/50,2435/50,PASS
+operator_id = OP15: defect rate,0.02053388090349076,0.0205338809034908,PASS
+operator_id = OP16: n dan NG,2504/61,2504/61,PASS
+operator_id = OP16: defect rate,0.024361022364217253,0.0243610223642173,PASS
+operator_id = OP17: n dan NG,2411/55,2411/55,PASS
+operator_id = OP17: defect rate,0.022812111157196183,0.0228121111571962,PASS
+operator_id = OP18: n dan NG,2421/53,2421/53,PASS
+operator_id = OP18: defect rate,0.021891780256092525,0.0218917802560925,PASS
+operator_id = OP19: n dan NG,2887/178,2887/178,PASS
+operator_id = OP19: defect rate,0.06165569795635608,0.0616556979563561,PASS
+operator_id = OP20: n dan NG,39/3,39/3,PASS
+operator_id = OP20: defect rate,0.07692307692307693,0.0769230769230769,PASS

@@ -1,9 +1,9 @@
 """Project 29: hasil inspeksi per unit lampu LED (simulasi) dengan shift, operator, lot, dan supplier. Seed tetap.
 
 +-50.000 unit, +-6 bulan (130 hari kerja), model 5W/9W/12W, 2 shift, 20 operator (kode), 40 lot dari 3 supplier, NG +-2,5%.
-Hasil (data/sim/): unit_result.csv, dim_lot.csv, dim_operator.csv, ground_truth.json, ground_truth_dirty.csv.
+Hasil: project/data/raw/ (unit_result.csv, dim_lot.csv, dim_operator.csv; tidak di-commit) dan project/data/ (ground_truth.json, ground_truth_dirty.csv; di-commit).
 Tabel `test_results` (hasil uji statistik) dihasilkan oleh analisis, bukan oleh skrip ini.
-Jalankan: python scripts/generate_data.py   (versi data: v1)
+Jalankan: python project/code/1-data-preparation/python/01_generate_data.py   (versi data: v1)
 """
 import json
 from pathlib import Path
@@ -11,8 +11,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "data" / "sim"
+ROOT = Path(__file__).resolve().parents[3]          # folder project/
+DATA = ROOT / "data"
+OUT = DATA / "raw"
 SEED = 29260302
 DATA_VERSION = "v1"
 N_UNITS, N_DAYS, START = 50_000, 130, "2026-03-02"
@@ -101,7 +102,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 df.to_csv(OUT / "unit_result.csv", index=False)
 dim_lot.to_csv(OUT / "dim_lot.csv", index=False)
 dim_op.to_csv(OUT / "dim_operator.csv", index=False)
-pd.DataFrame(dirty, columns=["unit_id", "dirty_type"]).to_csv(OUT / "ground_truth_dirty.csv", index=False)
+pd.DataFrame(dirty, columns=["unit_id", "dirty_type"]).to_csv(DATA / "ground_truth_dirty.csv", index=False)
 rate = lambda d: round(float((d["result"] == "NG").mean()) * 100, 3)
 gt = {"seed": SEED, "version": DATA_VERSION, "n_units_clean": N_UNITS, "rows_with_dirt": len(df), "ng_rate_pct_clean": rate(truth),
       "facts": [
@@ -112,5 +113,5 @@ gt = {"seed": SEED, "version": DATA_VERSION, "n_units_clean": N_UNITS, "rows_wit
           {"id": 3, "fact": "Operator noise: sampel kecil, efek tidak terdeteksi", **NOISE_OP, "n_units": int((truth["operator_id"] == "OP08").sum())},
           {"id": 4, "fact": "Operator sampel kecil (butuh Fisher exact)", **SMALL_OP},
           {"id": 5, "fact": "Data kotor", "rate": DIRTY_RATE, "types": kinds}]}
-(OUT / "ground_truth.json").write_text(json.dumps(gt, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+(DATA / "ground_truth.json").write_text(json.dumps(gt, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
 print(f"unit_result {len(df)} baris (NG bersih {rate(truth)}%), kotor {len(dirty)}; ", gt["facts"][1]["ng_rate_pct"])

@@ -1,0 +1,4 @@
+treatment,n,ng_rate,shift_p,shift_rate1,shift_rate2,operators_tested,operators_sig_raw,operators_sig_bh,op19_or,lots_tested,lots_sig_raw,lots_sig_bh,op08_p_adj
+A. Data mentah apa adanya,50312,0.02554062649,0.01615434181,0.02384370016,0.02722733037,20,3,1,2.725653298,41,2,0,0.234391702
+B. Semua unit bermasalah dibuang,48750,0.02566153846,0.007898115113,0.0237557026,0.02756050616,20,3,1,2.740483146,40,2,0,0.2919024123
+C. Cleaning sesuai log (dipakai),50000,0.0257,0.01517562694,0.02397754611,0.02741420591,20,3,1,2.727284066,40,2,0,0.1765601028
