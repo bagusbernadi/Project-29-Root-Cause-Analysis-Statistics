@@ -4,7 +4,7 @@
 
 **Halaman web:** https://bagusbernadi.github.io/Project-29-Root-Cause-Analysis-Statistics/
 
-**Status: Selesai di branch `project-29-build` (menunggu tinjauan sebelum digabung ke `main`).** Halaman rancangan dan Report ada di [`design-and-report/index.html`](design-and-report/index.html).
+**Status: Selesai dan digabung ke `main`.** Halaman rancangan dan Report ada di [`design-and-report/index.html`](design-and-report/index.html).
 
 **Tujuan:** menguji secara statistik apakah perbedaan defect rate antar shift, operator, lot material, dan supplier benar-benar nyata atau hanya variasi acak, lalu mengukur seberapa kuat setiap faktor terkait NG, agar investigasi difokuskan pada faktor yang terbukti.
 
